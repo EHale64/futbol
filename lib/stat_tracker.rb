@@ -29,4 +29,12 @@ class StatTracker
   def percentage_ties
     GameTeam.percentage_ties
   end
+
+  def percentage_home_wins 
+    GameTeam.percentage_home_wins
+  end
+
+  def percentage_away_wins
+    GameTeam.percentage_away_wins
+  end
 end
