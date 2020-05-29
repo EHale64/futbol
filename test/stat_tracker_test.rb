@@ -31,4 +31,9 @@ class StatTrackerTest < Minitest::Test
   def test_percentage_ties_is_found
     assert_equal 43.75, @stat_tracker.percentage_ties
   end
+
+  def test_highest_and_lowest_total_game_score
+    assert_equal 7, @stat_tracker.highest_total_score
+    assert_equal 1, @stat_tracker.lowest_total_score
+  end
 end
