@@ -22,9 +22,9 @@ class StatTracker
     @game_teams = GameTeam.accumulator
   end
 
-  def count_of_teams
-    Team.accumulator.count
-  end
+  # def count_of_teams
+  #   Team.accumulator.count
+  # end
 
   def percentage_ties
     GameTeam.percentage_ties

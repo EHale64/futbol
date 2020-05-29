@@ -75,4 +75,8 @@ class GameTeamTest < Minitest::Test
     assert_equal 43.75, @game_team.percentage_ties
   end
 
+  def test_it_can_average_goals
+    assert_equal 2.03, @game_team.average_goals_per_game
+  end
+
 end

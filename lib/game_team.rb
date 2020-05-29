@@ -34,7 +34,7 @@ class GameTeam
    @@accumulator
  end
 
- def self.percentage_ties
+ def percentage_ties
    ties = @@accumulator.count do |team|
      team.result == "TIE"
    end
