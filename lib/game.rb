@@ -34,6 +34,7 @@ class Game
   def self.accumulator
     @@accumulator
   end
+<<<<<<< HEAD
 
   def average_goals_by_season
     grouping = @@accumulator.group_by do |game|
@@ -49,4 +50,6 @@ class Game
     end
   end
 
+=======
+>>>>>>> f4fff5e7abb232663ca03f16281b65dcd3054125
 end

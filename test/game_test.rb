@@ -20,6 +20,7 @@ class GameTest < Minitest::Test
 
     Game.from_csv("./test/fixtures/games_fixture.csv")
     @game_1 = Game.accumulator[5]
+    @games = Game.accumulator
   end
 
   def test_it_exists
@@ -51,6 +52,7 @@ class GameTest < Minitest::Test
     assert_equal "Providence Park", @game_1.venue
     assert_equal '/api/v1/venues/null', @game_1.venue_link
   end
+<<<<<<< HEAD
 
   def test_average_goals_by_season
     expected = {
@@ -61,4 +63,6 @@ class GameTest < Minitest::Test
     assert_equal expected, @game.average_goals_by_season
   end
 
+=======
+>>>>>>> f4fff5e7abb232663ca03f16281b65dcd3054125
 end

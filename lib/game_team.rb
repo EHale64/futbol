@@ -34,11 +34,27 @@ class GameTeam
    @@accumulator
  end
 
- def self.percentage_ties
+ def percentage_ties
    ties = @@accumulator.count do |team|
      team.result == "TIE"
    end
    result = (ties.to_f / @@accumulator.count)*100
+   result.round(2)
+ end
+
+ def percentage_home_wins
+   home_wins = @@accumulator.count do |game_team|
+     game_team.result == "WIN" && game_team.hoa == "home"
+   end
+   result = (home_wins.to_f / (@@accumulator.count/2))*100
+   result.round(2)
+ end
+
+ def percentage_away_wins
+   away_wins = @@accumulator.count do |game_team|
+     game_team.result == "WIN" && game_team.hoa == "away"
+   end
+   result = (away_wins.to_f / (@@accumulator.count/2))*100
    result.round(2)
  end
 

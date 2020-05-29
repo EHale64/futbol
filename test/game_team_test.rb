@@ -27,6 +27,7 @@ class GameTeamTest < Minitest::Test
     @game_team = GameTeam.new(expected)
     GameTeam.from_csv("./test/fixtures/game_teams_fixture.csv")
     @game_team_2 = GameTeam.accumulator[5]
+    @games_teams = GameTeam.accumulator
   end
 
   def test_it_exists
@@ -72,7 +73,15 @@ class GameTeamTest < Minitest::Test
   end
 
   def test_it_can_find_tie_percentage
-    assert_equal 43.75, @game_team.percentage_ties
+    assert_equal 43.75, GameTeam.percentage_ties
+  end
+
+  def test_it_can_calculate_percentage_home_wins
+    assert_equal 31.25, @game_team.percentage_home_wins
+  end
+
+  def test_it_can_calculate_percentage_home_wins
+    assert_equal 25.00, @game_team.percentage_away_wins
   end
 
   def test_it_can_average_goals
