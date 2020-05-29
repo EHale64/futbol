@@ -52,4 +52,13 @@ class GameTest < Minitest::Test
     assert_equal '/api/v1/venues/null', @game_1.venue_link
   end
 
+  def test_average_goals_by_season
+    expected = {
+      20172018 => 4.5,
+      20132014 => 2.67,
+      20122013 => 5
+    }
+    assert_equal expected, @game.average_goals_by_season
+  end
+
 end
