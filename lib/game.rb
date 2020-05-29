@@ -39,14 +39,14 @@ class Game
     scores = @@accumulator.map do |team|
       team.away_goals + team.home_goals
     end
-    scores.uniq.max
+    scores.max
   end
 
   def self.lowest_total_score
     scores = @@accumulator.map do |team|
       team.away_goals + team.home_goals
     end
-    scores.uniq.min
+    scores.min
   end
 
 end
