@@ -88,4 +88,29 @@ class GameTeamTest < Minitest::Test
     assert_equal 2.03, @game_team.average_goals_per_game
   end
 
+  def test_it_can_find_best_offense
+  assert_equal 22, @game_team.best_offense
+end
+
+def test_it_can_find_worst_offense
+
+  assert_equal 19, @game_team.worst_offense
+end
+
+def test_it_can_find_highest_scoring_home_team
+  assert_equal 24, @game_team.highest_scoring_home_team
+end
+
+def test_it_can_find_highest_scoring_visitor
+  assert_equal 22, @game_team.highest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_visitor
+  assert_equal 19, @game_team.lowest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_home_team
+  assert_equal 23, @game_team.lowest_scoring_home_team
+end
+
 end

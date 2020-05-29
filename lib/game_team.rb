@@ -65,4 +65,88 @@ class GameTeam
    (goals.sum.to_f / @@accumulator.count).round(2)
  end
 
+ def best_offense
+  grouped = Hash.new{|hash, key| hash[key] = []}
+  @@accumulator.each do |game_team|
+    grouped[game_team.team_id] << game_team.goals
+  end
+
+  avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  best_offense = avg_score.max_by { |k,v| v}
+  best_offense = best_offense[0] ##Need to convert to team name
+end
+
+def worst_offense
+  grouped = Hash.new{|hash, key| hash[key] = []}
+  @@accumulator.each do |game_team|
+    grouped[game_team.team_id] << game_team.goals
+  end
+
+  avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  worst_offense = avg_score.min_by { |k,v| v}
+  worst_offense = worst_offense[0] ##Need to convert to team name
+
+
+end
+
+def highest_scoring_home_team
+  grouped = Hash.new{|hash, key| hash[key] = []}
+
+  home_games = @@accumulator.select do |game_team|
+    game_team.hoa == "home"
+  end
+  home_games.each do |game_team|
+    grouped[game_team.team_id] << game_team.goals
+  end
+
+  avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  high_score_home = avg_score.max_by { |k,v| v}
+  high_score_home = high_score_home[0] ##Need to convert to team name
+end
+
+def highest_scoring_visitor
+  grouped = Hash.new{|hash, key| hash[key] = []}
+
+  away_games = @@accumulator.select do |game_team|
+    game_team.hoa == "away"
+  end
+  away_games.each do |game_team|
+    grouped[game_team.team_id] << game_team.goals
+  end
+
+  avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  high_score_visitor = avg_score.max_by { |k,v| v}
+  high_score_visitor = high_score_visitor[0] ##Need to convert to team name
+end
+
+def lowest_scoring_visitor
+  grouped = Hash.new{|hash, key| hash[key] = []}
+
+  away_games = @@accumulator.select do |game_team|
+    game_team.hoa == "away"
+  end
+  away_games.each do |game_team|
+    grouped[game_team.team_id] << game_team.goals
+  end
+
+  avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  low_score_visitor = avg_score.min_by { |k,v| v}
+  low_score_visitor = low_score_visitor[0] ##Need to convert to team name
+end
+
+def lowest_scoring_home_team
+  grouped = Hash.new{|hash, key| hash[key] = []}
+
+  home_games = @@accumulator.select do |game_team|
+    game_team.hoa == "home"
+  end
+  home_games.each do |game_team|
+    grouped[game_team.team_id] << game_team.goals
+  end
+
+  avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  low_score_home = avg_score.min_by { |k,v| v}
+  low_score_home = low_score_home[0] ##Need to convert to team name
+end
+
 end
