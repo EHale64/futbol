@@ -1,7 +1,6 @@
 require_relative 'loadable'
 
 class Game
-  @@accumulator = []
   extend Loadable
   attr_reader :game_id,
               :season,
@@ -28,6 +27,7 @@ class Game
   end
 
   def self.from_csv(games_file_path)
+    @@accumulator = []
     load_csv(games_file_path, self)
   end
 

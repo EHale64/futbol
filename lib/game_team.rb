@@ -1,7 +1,6 @@
 require_relative 'loadable'
 
 class GameTeam
-  @@accumulator = []
   extend Loadable
   attr_reader :game_id, :team_id, :hoa, :result, :settled_in,
               :head_coach, :goals, :shots, :tackles, :pim,
@@ -27,6 +26,7 @@ class GameTeam
   end
 
  def self.from_csv(games_file_path)
+   @@accumulator = []
    load_csv(games_file_path, self)
  end
 
@@ -34,7 +34,7 @@ class GameTeam
    @@accumulator
  end
 
- def percentage_ties
+ def self.percentage_ties
    ties = @@accumulator.count do |team|
      team.result == "TIE"
    end
@@ -43,12 +43,10 @@ class GameTeam
  end
 
  def average_goals_per_game
-   require "pry"; binding.pry
    goals = @@accumulator.map do |game|
      game.goals
    end
-   average_goals = goals.sum.to_f / @@accumulator.count
-   average_goals.round(2)
+   (goals.sum.to_f / @@accumulator.count).round(2)
  end
 
 end

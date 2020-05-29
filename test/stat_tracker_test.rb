@@ -24,11 +24,11 @@ class StatTrackerTest < Minitest::Test
     assert Array, @stat_tracker.game_teams
   end
 
-  # def test_it_can_count_teams
-  #   assert_equal 32, @stat_tracker.count_of_teams
-  # end
+  def test_it_can_count_teams
+    assert_equal 32, @stat_tracker.count_of_teams
+  end
 
   def test_percentage_ties_is_found
-    assert_equal 43.75, @stat_tracker.percentage_ties
+    assert_equal 43.75, GameTeam.percentage_ties
   end
 end
