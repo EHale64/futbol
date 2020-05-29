@@ -36,4 +36,12 @@ class StatTracker
      end
     games_by_season.transform_values { |season| season.length }
   end
+
+  def percentage_home_wins
+    GameTeam.percentage_home_wins
+  end
+
+  def percentage_away_wins
+    GameTeam.percentage_away_wins
+  end
 end
