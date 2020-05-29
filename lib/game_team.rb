@@ -58,7 +58,11 @@ class GameTeam
    result.round(2)
  end
 
-
-
+ def average_goals_per_game
+   goals = @@accumulator.map do |game|
+     game.goals
+   end
+   (goals.sum.to_f / @@accumulator.count).round(2)
+ end
 
 end

@@ -29,7 +29,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_percentage_ties_is_found
-    assert_equal 43.75, @stat_tracker.percentage_ties
+    assert_equal 43.75, GameTeam.percentage_ties
   end
 
 
