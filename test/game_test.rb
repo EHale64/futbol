@@ -52,4 +52,22 @@ class GameTest < Minitest::Test
     assert_equal "Providence Park", @game_1.venue
     assert_equal '/api/v1/venues/null', @game_1.venue_link
   end
+
+  def test_average_goals_by_season
+    expected = {
+      "20172018" => 4.5,
+      "20132014" => 3.78,
+      "20122013" => 5.0
+    }
+    assert_equal expected, @game.average_goals_by_season
+  end
+
+  def test_it_can_find_highest_total_score
+    assert_equal 7, Game.highest_total_score
+  end
+
+  def test_it_can_find_lowest_total_score
+    assert_equal 1, Game.lowest_total_score
+  end
+
 end

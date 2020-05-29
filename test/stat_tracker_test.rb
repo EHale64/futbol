@@ -29,7 +29,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_percentage_ties_is_found
-    assert_equal 43.75, @stat_tracker.percentage_ties
+    assert_equal 43.75, GameTeam.percentage_ties
   end
 
 
@@ -40,5 +40,10 @@ class StatTrackerTest < Minitest::Test
                 "20122013" => 7
                 })
     assert_equal expected, @stat_tracker.count_of_games_by_season
+  end
+
+  def test_highest_and_lowest_total_game_score
+    assert_equal 7, @stat_tracker.highest_total_score
+    assert_equal 1, @stat_tracker.lowest_total_score
   end
 end
