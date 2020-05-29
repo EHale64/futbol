@@ -35,4 +35,18 @@ class Game
     @@accumulator
   end
 
+  def self.highest_total_score
+    scores = @@accumulator.map do |team|
+      team.away_goals + team.home_goals
+    end
+    scores.uniq.max
+  end
+
+  def self.lowest_total_score
+    scores = @@accumulator.map do |team|
+      team.away_goals + team.home_goals
+    end
+    scores.uniq.min
+  end
+
 end
