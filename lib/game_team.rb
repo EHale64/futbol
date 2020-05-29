@@ -42,5 +42,13 @@ class GameTeam
    result.round(2)
  end
 
+ def average_goals_per_game
+   require "pry"; binding.pry
+   goals = @@accumulator.map do |game|
+     game.goals
+   end
+   average_goals = goals.sum.to_f / @@accumulator.count
+   average_goals.round(2)
+ end
 
 end
