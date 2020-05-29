@@ -1,7 +1,6 @@
 require_relative 'loadable'
 
 class Game
-  @@accumulator = []
   extend Loadable
   attr_reader :game_id,
               :season,
@@ -28,6 +27,7 @@ class Game
   end
 
   def self.from_csv(games_file_path)
+    @@accumulator = []
     load_csv(games_file_path, self)
   end
 
@@ -47,6 +47,20 @@ class Game
       team.away_goals + team.home_goals
     end
     scores.min
+  end
+
+  def average_goals_by_season
+    grouping = @@accumulator.group_by do |game|
+      game.season
+    end
+    season_goals = grouping.transform_values do |games|
+      games.map do |game|
+        game.home_goals.to_f + game.away_goals
+      end
+    end
+    season_goals.transform_values do |goals|
+      (goals.sum / goals.count).round(2)
+    end
   end
 
 end

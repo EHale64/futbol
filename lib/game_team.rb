@@ -1,7 +1,6 @@
 require_relative 'loadable'
 
 class GameTeam
-  @@accumulator = []
   extend Loadable
   attr_reader :game_id, :team_id, :hoa, :result, :settled_in,
               :head_coach, :goals, :shots, :tackles, :pim,
@@ -27,6 +26,7 @@ class GameTeam
   end
 
  def self.from_csv(games_file_path)
+   @@accumulator = []
    load_csv(games_file_path, self)
  end
 
@@ -34,7 +34,7 @@ class GameTeam
    @@accumulator
  end
 
- def self.percentage_ties
+ def percentage_ties
    ties = @@accumulator.count do |team|
      team.result == "TIE"
    end
@@ -42,5 +42,27 @@ class GameTeam
    result.round(2)
  end
 
+ def percentage_home_wins
+   home_wins = @@accumulator.count do |game_team|
+     game_team.result == "WIN" && game_team.hoa == "home"
+   end
+   result = (home_wins.to_f / (@@accumulator.count/2))*100
+   result.round(2)
+ end
+
+ def percentage_away_wins
+   away_wins = @@accumulator.count do |game_team|
+     game_team.result == "WIN" && game_team.hoa == "away"
+   end
+   result = (away_wins.to_f / (@@accumulator.count/2))*100
+   result.round(2)
+ end
+
+ def average_goals_per_game
+   goals = @@accumulator.map do |game|
+     game.goals
+   end
+   (goals.sum.to_f / @@accumulator.count).round(2)
+ end
 
 end
