@@ -63,11 +63,11 @@ class GameTest < Minitest::Test
   end
 
   def test_it_can_find_highest_total_score
-    assert_equal 7, @game_1.highest_total_score
+    assert_equal 7, Game.highest_total_score
   end
 
   def test_it_can_find_lowest_total_score
-    assert_equal 1, @game_1.lowest_total_score
+    assert_equal 1, Game.lowest_total_score
   end
 
 end
