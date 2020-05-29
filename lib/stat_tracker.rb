@@ -29,4 +29,12 @@ class StatTracker
   def percentage_ties
     GameTeam.percentage_ties
   end
+
+  def highest_total_score
+    Game.highest_total_score
+  end
+
+  def lowest_total_score
+    Game.lowest_total_score
+  end
 end
