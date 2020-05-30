@@ -59,7 +59,7 @@ class GameTest < Minitest::Test
       "20132014" => 3.78,
       "20122013" => 5.0
     }
-    assert_equal expected, @game.average_goals_by_season
+    assert_equal expected, Game.average_goals_by_season
   end
 
   def test_it_can_find_highest_total_score
