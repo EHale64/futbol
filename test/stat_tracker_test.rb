@@ -46,4 +46,13 @@ class StatTrackerTest < Minitest::Test
     assert_equal 7, @stat_tracker.highest_total_score
     assert_equal 1, @stat_tracker.lowest_total_score
   end
+
+  def test_coach_win_rate
+    assert_equal "Craig Berube", @stat_tracker.winningest_coach("2013")
+    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("2013")
+  end
+
+  def test_tackle_volume_by_season
+    assert_equal 13, @stat_tracker.most_tackles("2013")
+  end
 end
