@@ -42,7 +42,7 @@ class GameTeam
    result.round(2)
  end
 
- def percentage_home_wins
+ def self.percentage_home_wins
    home_wins = @@accumulator.count do |game_team|
      game_team.result == "WIN" && game_team.hoa == "home"
    end
@@ -50,7 +50,7 @@ class GameTeam
    result.round(2)
  end
 
- def percentage_away_wins
+ def self.percentage_away_wins
    away_wins = @@accumulator.count do |game_team|
      game_team.result == "WIN" && game_team.hoa == "away"
    end
@@ -58,11 +58,33 @@ class GameTeam
    result.round(2)
  end
 
- def average_goals_per_game
+ def self.average_goals_per_game
    goals = @@accumulator.map do |game|
      game.goals
    end
    (goals.sum.to_f / @@accumulator.count).round(2)
+ end
+
+ def self.most_goals_scored(team_id)
+   team = @@accumulator.find_all do |team|
+     team.team_id.to_i == team_id
+   end
+   team.map {|info| info.goals}.max
+ end
+
+ def self.fewest_goals_scored(team_id)
+   team = @@accumulator.find_all do |team|
+     team.team_id.to_i == team_id
+   end
+   team.map {|info| info.goals}.min
+ end
+
+ def self.average_win_percentage(team_id)
+   team = @@accumulator.find_all do |team|
+     team.team_id.to_i == team_id
+   end
+   team_wins = team.find_all {|info| info.result == "WIN"}
+   (team_wins.count.to_f/team.count.to_f) * 100
  end
 
 end
