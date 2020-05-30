@@ -37,7 +37,7 @@ class StatTracker
   def lowest_total_score
     Game.lowest_total_score
   end
-  
+
   def count_of_games_by_season
     games_by_season = @games.group_by do |game|
        game.season
@@ -51,5 +51,21 @@ class StatTracker
 
   def percentage_away_wins
     GameTeam.percentage_away_wins
+  end
+
+  def team_info(team_id)
+    Team.team_info(team_id)
+  end
+
+  def most_goals_scored(team_id)
+    GameTeam.most_goals_scored(team_id)
+  end
+
+  def fewest_goals_scored(team_id)
+    GameTeam.fewest_goals_scored(team_id)
+  end
+
+  def average_win_percentage(team_id)
+    GameTeam.average_win_percentage(team_id)
   end
 end
