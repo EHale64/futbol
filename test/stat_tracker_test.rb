@@ -29,7 +29,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_percentage_ties_is_found
-    assert_equal 43.75, GameTeam.percentage_ties
+    assert_equal 43.75, @stat_tracker.percentage_ties
   end
 
 
@@ -46,4 +46,42 @@ class StatTrackerTest < Minitest::Test
     assert_equal 7, @stat_tracker.highest_total_score
     assert_equal 1, @stat_tracker.lowest_total_score
   end
+
+  def test_team_info
+    expected = {
+              team_id: 1,
+              franchiseId: 23,
+              teamName: "Atlanta United",
+              abbreviation: "ATL",
+              link: "/api/v1/teams/1"
+            }
+    assert_equal expected, @stat_tracker.team_info(1)
+
+    expected = {
+              team_id: 28,
+              franchiseId: 29,
+              teamName: "Los Angeles FC",
+              abbreviation: "LFC",
+              link: "/api/v1/teams/28"
+            }
+    assert_equal expected, @stat_tracker.team_info(28)
+  end
+
+  def test_most_goals_scored_by_team
+    assert_equal 3, @stat_tracker.most_goals_scored(15)
+    assert_equal 3, @stat_tracker.most_goals_scored(5)
+    assert_equal 3, @stat_tracker.most_goals_scored(7)
+  end
+
+  def test_fewest_goals_scored_by_team
+    assert_equal 1, @stat_tracker.fewest_goals_scored(15)
+    assert_equal 1, @stat_tracker.fewest_goals_scored(5)
+    assert_equal 1, @stat_tracker.fewest_goals_scored(7)
+  end
+
+  def test_average_win_percentage_for_team
+    assert_equal 50.00, @stat_tracker.average_win_percentage(5)
+    assert_equal 0, @stat_tracker.average_win_percentage(7)
+  end
+
 end
