@@ -1,6 +1,7 @@
 require_relative "game"
 require_relative "team"
 require_relative "game_team"
+require 'pry'
 
 class StatTracker
   attr_reader :games, :teams, :game_teams
@@ -37,7 +38,7 @@ class StatTracker
   def lowest_total_score
     Game.lowest_total_score
   end
-  
+
   def count_of_games_by_season
     games_by_season = @games.group_by do |game|
        game.season
@@ -52,4 +53,149 @@ class StatTracker
   def percentage_away_wins
     GameTeam.percentage_away_wins
   end
+
+  def self.percentage_ties
+    ties = @game_teams.count do |team|
+      team.result == "TIE"
+    end
+    result = (ties.to_f / @game_teams.count)*100
+    result.round(2)
+  end
+
+  def percentage_home_wins
+    home_wins = @game_teams.count do |game_team|
+      game_team.result == "WIN" && game_team.hoa == "home"
+    end
+    result = (home_wins.to_f / (@game_teams.count/2))*100
+    result.round(2)
+  end
+
+  def percentage_away_wins
+    away_wins = @game_teams.count do |game_team|
+      game_team.result == "WIN" && game_team.hoa == "away"
+    end
+    result = (away_wins.to_f / (@game_teams.count/2))*100
+    result.round(2)
+  end
+
+  def average_goals_per_game
+    goals = @game_teams.map do |game|
+      game.goals
+    end
+    (goals.sum.to_f / @game_teams.count).round(2)
+  end
+
+  def best_offense
+   grouped = Hash.new{|hash, key| hash[key] = []}
+   @game_teams.each do |game_team|
+     grouped[game_team.team_id] << game_team.goals
+   end
+
+   avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+   best_offense = avg_score.max_by { |k,v| v}
+   best_offense = best_offense[0]
+
+   team = @teams.find do |team|
+    team.team_id.to_i == best_offense
+    end
+   team.teamname
+ end
+
+ def worst_offense
+   grouped = Hash.new{|hash, key| hash[key] = []}
+   @game_teams.each do |game_team|
+     grouped[game_team.team_id] << game_team.goals
+   end
+
+   avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+   worst_offense = avg_score.min_by { |k,v| v}
+   worst_offense = worst_offense[0] ##Need to convert to team name
+
+   team = @teams.find do |team|
+    team.team_id.to_i == worst_offense
+    end
+   team.teamname
+
+ end
+
+ def highest_scoring_home_team
+   grouped = Hash.new{|hash, key| hash[key] = []}
+
+   home_games = @game_teams.select do |game_team|
+     game_team.hoa == "home"
+   end
+   home_games.each do |game_team|
+     grouped[game_team.team_id] << game_team.goals
+   end
+
+   avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+   high_score_home = avg_score.max_by { |k,v| v}
+   high_score_home = high_score_home[0]
+
+   team = @teams.find do |team|
+    team.team_id.to_i == high_score_home
+    end
+   team.teamname
+ end
+
+ def highest_scoring_visitor
+   grouped = Hash.new{|hash, key| hash[key] = []}
+
+   away_games = @game_teams.select do |game_team|
+     game_team.hoa == "away"
+   end
+   away_games.each do |game_team|
+     grouped[game_team.team_id] << game_team.goals
+   end
+
+   avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+   high_score_visitor = avg_score.max_by { |k,v| v}
+   high_score_visitor = high_score_visitor[0]
+
+   team = @teams.find do |team|
+    team.team_id.to_i == high_score_visitor
+    end
+   team.teamname
+ end
+
+ def lowest_scoring_visitor
+   grouped = Hash.new{|hash, key| hash[key] = []}
+
+   away_games = @game_teams.select do |game_team|
+     game_team.hoa == "away"
+   end
+   away_games.each do |game_team|
+     grouped[game_team.team_id] << game_team.goals
+   end
+
+   avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+   low_score_visitor = avg_score.min_by { |k,v| v}
+   low_score_visitor = low_score_visitor[0]
+
+   team = @teams.find do |team|
+    team.team_id.to_i == low_score_visitor
+    end
+   team.teamname
+ end
+
+ def lowest_scoring_home_team
+   grouped = Hash.new{|hash, key| hash[key] = []}
+
+   home_games = @game_teams.select do |game_team|
+     game_team.hoa == "home"
+   end
+   home_games.each do |game_team|
+     grouped[game_team.team_id] << game_team.goals
+   end
+
+   avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+   low_score_home = avg_score.min_by { |k,v| v}
+   low_score_home = low_score_home[0]
+
+   team = @teams.find do |team|
+    team.team_id.to_i == low_score_home
+    end
+   team.teamname
+ end
+
 end

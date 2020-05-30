@@ -72,45 +72,6 @@ class GameTeamTest < Minitest::Test
     assert_equal 6, @game_team_2.takeaways
   end
 
-  def test_it_can_find_tie_percentage
-    assert_equal 43.75, GameTeam.percentage_ties
-  end
-
-  def test_it_can_calculate_percentage_home_wins
-    assert_equal 31.25, @game_team.percentage_home_wins
-  end
-
-  def test_it_can_calculate_percentage_home_wins
-    assert_equal 25.00, @game_team.percentage_away_wins
-  end
-
-  def test_it_can_average_goals
-    assert_equal 2.03, @game_team.average_goals_per_game
-  end
-
-  def test_it_can_find_best_offense
-  assert_equal 22, @game_team.best_offense
-end
-
-def test_it_can_find_worst_offense
-
-  assert_equal 19, @game_team.worst_offense
-end
-
-def test_it_can_find_highest_scoring_home_team
-  assert_equal 24, @game_team.highest_scoring_home_team
-end
-
-def test_it_can_find_highest_scoring_visitor
-  assert_equal 22, @game_team.highest_scoring_visitor
-end
-
-def test_it_can_find_lowest_scoring_visitor
-  assert_equal 19, @game_team.lowest_scoring_visitor
-end
-
-def test_it_can_find_lowest_scoring_home_team
-  assert_equal 23, @game_team.lowest_scoring_home_team
-end
+  
 
 end

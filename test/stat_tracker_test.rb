@@ -28,9 +28,9 @@ class StatTrackerTest < Minitest::Test
     assert_equal 32, @stat_tracker.count_of_teams
   end
 
-  def test_percentage_ties_is_found
-    assert_equal 43.75, GameTeam.percentage_ties
-  end
+  # def test_percentage_ties_is_found
+  #   assert_equal 43.75, GameTeam.percentage_ties
+  # end
 
 
   def test_it_can_get_games_by_season
@@ -46,4 +46,46 @@ class StatTrackerTest < Minitest::Test
     assert_equal 7, @stat_tracker.highest_total_score
     assert_equal 1, @stat_tracker.lowest_total_score
   end
+
+  # def test_it_can_find_tie_percentage
+  #   assert_equal 43.75, @stat_tracker.percentage_ties
+  # end
+
+  def test_it_can_calculate_percentage_home_wins
+    assert_equal 31.25, @stat_tracker.percentage_home_wins
+  end
+
+  def test_it_can_calculate_percentage_home_wins
+    assert_equal 25.00, @stat_tracker.percentage_away_wins
+  end
+
+  def test_it_can_average_goals
+    assert_equal 2.03, @stat_tracker.average_goals_per_game
+  end
+
+  def test_it_can_find_best_offense
+  assert_equal "Washington Spirit FC", @stat_tracker.best_offense
+end
+
+def test_it_can_find_worst_offense
+
+  assert_equal "Philadelphia Union", @stat_tracker.worst_offense
+end
+
+def test_it_can_find_highest_scoring_home_team
+  assert_equal "Real Salt Lake", @stat_tracker.highest_scoring_home_team
+end
+
+def test_it_can_find_highest_scoring_visitor
+  assert_equal "Washington Spirit FC", @stat_tracker.highest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_visitor
+  assert_equal "Philadelphia Union", @stat_tracker.lowest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_home_team
+  assert_equal "Montreal Impact", @stat_tracker.lowest_scoring_home_team
+end
+
 end
