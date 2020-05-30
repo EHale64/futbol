@@ -1,7 +1,6 @@
 require 'csv'
 require_relative '../test/test_helper'
 require_relative '../lib/game_team'
-require 'pry';
 
 class GameTeamTest < Minitest::Test
 

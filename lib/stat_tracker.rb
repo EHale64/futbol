@@ -73,4 +73,18 @@ class StatTracker
     end
     accurate_team.teamname
   end
+
+  def least_accurate_team(season)
+    team_results = seasonal_team_games(season).group_by do |team|
+      team.team_id
+    end
+    accuracy = team_results.transform_values do |team|
+      team.sum {|game| game.goals}.to_f / team.sum { |game| game.shots}
+    end
+    least_accurate = accuracy.min_by { |k, v| v}
+    inaccurate_team = @teams.find do |team|
+      team.team_id.to_i == least_accurate[0]
+    end
+    inaccurate_team.teamname
+  end
 end
