@@ -53,6 +53,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_tackle_volume_by_season
-    assert_equal 13, @stat_tracker.most_tackles("2013")
+    assert_equal "North Carolina Courage", @stat_tracker.most_tackles("2013")
+    assert_equal "Portland Timbers", @stat_tracker.fewest_tackles("2013")
   end
 end
