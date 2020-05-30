@@ -46,4 +46,8 @@ class StatTrackerTest < Minitest::Test
     assert_equal 7, @stat_tracker.highest_total_score
     assert_equal 1, @stat_tracker.lowest_total_score
   end
+
+  def test_it_can_find_the_most_accurate_team
+    assert_equal "New York Red Bulls", @stat_tracker.most_accurate_team("20132014")
+  end
 end
