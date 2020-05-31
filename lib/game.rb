@@ -62,5 +62,4 @@ class Game
       (goals.sum / goals.count).round(2)
     end
   end
-
 end

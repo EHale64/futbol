@@ -48,6 +48,63 @@ class StatTrackerTest < Minitest::Test
     assert_equal 1, @stat_tracker.lowest_total_score
   end
 
+<<<<<<< HEAD
+  def test_coach_win_rate
+    assert_equal "Craig Berube", @stat_tracker.winningest_coach("2013")
+    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("2013")
+  end
+
+  def test_tackle_volume_by_season
+    assert_equal "North Carolina Courage", @stat_tracker.most_tackles("2013")
+    assert_equal "Portland Timbers", @stat_tracker.fewest_tackles("2013")
+=======
+  # def test_it_can_find_tie_percentage
+  #   assert_equal 43.75, @stat_tracker.percentage_ties
+  # end
+
+  def test_it_can_calculate_percentage_home_wins
+    assert_equal 31.25, @stat_tracker.percentage_home_wins
+  end
+
+  def test_it_can_calculate_percentage_home_wins
+    assert_equal 25.00, @stat_tracker.percentage_away_wins
+  end
+
+  def test_it_can_average_goals
+    assert_equal 2.03, @stat_tracker.average_goals_per_game
+  end
+
+  def test_it_can_find_best_offense
+  assert_equal "Washington Spirit FC", @stat_tracker.best_offense
+end
+
+def test_it_can_find_worst_offense
+
+  assert_equal "Philadelphia Union", @stat_tracker.worst_offense
+end
+
+def test_it_can_find_highest_scoring_home_team
+  assert_equal "Real Salt Lake", @stat_tracker.highest_scoring_home_team
+end
+
+def test_it_can_find_highest_scoring_visitor
+  assert_equal "Washington Spirit FC", @stat_tracker.highest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_visitor
+  assert_equal "Philadelphia Union", @stat_tracker.lowest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_home_team
+  assert_equal "Montreal Impact", @stat_tracker.lowest_scoring_home_team
+end
+
+  def test_it_can_find_most_accurate_team
+    assert_equal "New York Red Bulls", @stat_tracker.most_accurate_team("20132014")
+  end
+
+  def test_it_can_find_least_accurate_team
+    assert_equal "Philadelphia Union", @stat_tracker.least_accurate_team("20132014")
   def test_team_info
     expected = {
               team_id: 1,
@@ -99,4 +156,5 @@ class StatTrackerTest < Minitest::Test
   end
 
 
+  end
 end
