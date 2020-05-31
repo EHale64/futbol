@@ -1,13 +1,14 @@
-require'./test/test_helper'
-require'./lib/stat_tracker'
+require_relative'../test/test_helper'
+require_relative'../lib/stat_tracker'
 require'csv'
+require 'pry'
 
 class StatTrackerTest < Minitest::Test
   def setup
     @stat_tracker = StatTracker.from_csv({
-      games: "./test/fixtures/games_fixture.csv",
-      teams: "./data/teams.csv",
-      game_teams: "./test/fixtures/game_teams_fixture.csv"})
+      games: "../test/fixtures/games_fixture.csv",
+      teams: "../data/teams.csv",
+      game_teams: "../test/fixtures/game_teams_fixture.csv"})
   end
 
   def test_it_exists
@@ -64,29 +65,28 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_best_offense
-  assert_equal "Washington Spirit FC", @stat_tracker.best_offense
-end
+    assert_equal "Washington Spirit FC", @stat_tracker.best_offense
+  end
 
-def test_it_can_find_worst_offense
+  def test_it_can_find_worst_offense
+    assert_equal "Philadelphia Union", @stat_tracker.worst_offense
+  end
 
-  assert_equal "Philadelphia Union", @stat_tracker.worst_offense
-end
+  def test_it_can_find_highest_scoring_home_team
+    assert_equal "Real Salt Lake", @stat_tracker.highest_scoring_home_team
+  end
 
-def test_it_can_find_highest_scoring_home_team
-  assert_equal "Real Salt Lake", @stat_tracker.highest_scoring_home_team
-end
+  def test_it_can_find_highest_scoring_visitor
+    assert_equal "Washington Spirit FC", @stat_tracker.highest_scoring_visitor
+  end
 
-def test_it_can_find_highest_scoring_visitor
-  assert_equal "Washington Spirit FC", @stat_tracker.highest_scoring_visitor
-end
+  def test_it_can_find_lowest_scoring_visitor
+    assert_equal "Philadelphia Union", @stat_tracker.lowest_scoring_visitor
+  end
 
-def test_it_can_find_lowest_scoring_visitor
-  assert_equal "Philadelphia Union", @stat_tracker.lowest_scoring_visitor
-end
-
-def test_it_can_find_lowest_scoring_home_team
-  assert_equal "Montreal Impact", @stat_tracker.lowest_scoring_home_team
-end
+  def test_it_can_find_lowest_scoring_home_team
+    assert_equal "Montreal Impact", @stat_tracker.lowest_scoring_home_team
+  end
 
   def test_it_can_find_most_accurate_team
     assert_equal "New York Red Bulls", @stat_tracker.most_accurate_team("20132014")
@@ -95,4 +95,30 @@ end
   def test_it_can_find_least_accurate_team
     assert_equal "Philadelphia Union", @stat_tracker.least_accurate_team("20132014")
   end
+
+  def test_it_can_track_wins_against_other_teams
+skip
+    expected = {13 => 1}
+    assert_equal expected, @stat_tracker.find_wins_against_other_teams("Montreal Impact")
+  end
+
+  def test_it_can_track_losses_against_other_teams
+skip
+    expected = {5 => 1}
+    assert_equal expected, @stat_tracker.find_losses_against_other_teams("Montreal Impact")
+  end
+
+  def test_it_can_find_winning_percentage_against_all_teams
+skip
+    assert_equal "Houston Dash", @stat_tracker.win_percentage_against_all_teams("Montreal Impact")
+  end
+
+  def test_it_can_find_favorite_opponent
+    assert_equal ["Philadelphia Union"], @stat_tracker.favorite_opponent("Montreal Impact")
+  end
+
+  def test_it_can_find_rivals
+    assert_equal ["North Carolina Courage"], @stat_tracker.rival("Montreal Impact")
+  end
+
 end
