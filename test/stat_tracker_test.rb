@@ -5,11 +5,9 @@ require'csv'
 class StatTrackerTest < Minitest::Test
   def setup
     @stat_tracker = StatTracker.from_csv({
-      # games: "./test/fixtures/games_fixture.csv",
-      games: "./data/games.csv",
+      games: "./test/fixtures/games_fixture.csv",
       teams: "./data/teams.csv",
-      # game_teams: "./test/fixtures/game_teams_fixture.csv"
-      game_teams: "./data/game_teams.csv",
+      game_teams: "./test/fixtures/game_teams_fixture.csv"
       })
   end
 
