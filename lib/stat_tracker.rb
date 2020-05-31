@@ -89,7 +89,8 @@ class StatTracker
       end
     end
     win_season_hash = winning_seasons.group_by {|season| season}
-    win_season_hash.transform_values {|value| value.count}.max[0]
+    max_seasons_by_win = win_season_hash.transform_values {|value| value.count}.invert.max
+    [max_seasons_by_win].to_h.values.reduce
   end
 
   def worst_season(team_id)
@@ -102,6 +103,8 @@ class StatTracker
       end
     end
     win_season_hash = winning_seasons.group_by {|season| season}
-    win_season_hash.transform_values {|value| value.count}.min[0]
+    min_seasons_by_win = win_season_hash.transform_values {|value| value.count}.invert.min
+    [min_seasons_by_win].to_h.values.reduce
+  end
 
 end
