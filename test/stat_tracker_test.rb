@@ -47,6 +47,16 @@ class StatTrackerTest < Minitest::Test
     assert_equal 1, @stat_tracker.lowest_total_score
   end
 
+<<<<<<< HEAD
+  def test_coach_win_rate
+    assert_equal "Craig Berube", @stat_tracker.winningest_coach("2013")
+    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("2013")
+  end
+
+  def test_tackle_volume_by_season
+    assert_equal "North Carolina Courage", @stat_tracker.most_tackles("2013")
+    assert_equal "Portland Timbers", @stat_tracker.fewest_tackles("2013")
+=======
   # def test_it_can_find_tie_percentage
   #   assert_equal 43.75, @stat_tracker.percentage_ties
   # end
@@ -94,5 +104,6 @@ end
 
   def test_it_can_find_least_accurate_team
     assert_equal "Philadelphia Union", @stat_tracker.least_accurate_team("20132014")
+>>>>>>> c171d6d2af8a1aa496b9829f5debb2cabac0c7b5
   end
 end
