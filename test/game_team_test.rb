@@ -1,7 +1,6 @@
 require 'csv'
 require_relative '../test/test_helper'
 require_relative '../lib/game_team'
-require 'pry';
 
 class GameTeamTest < Minitest::Test
 
@@ -77,15 +76,32 @@ class GameTeamTest < Minitest::Test
   end
 
   def test_it_can_calculate_percentage_home_wins
-    assert_equal 31.25, @game_team.percentage_home_wins
+    assert_equal 31.25, GameTeam.percentage_home_wins
   end
 
   def test_it_can_calculate_percentage_home_wins
-    assert_equal 25.00, @game_team.percentage_away_wins
+    assert_equal 25.00, GameTeam.percentage_away_wins
   end
 
   def test_it_can_average_goals
-    assert_equal 2.03, @game_team.average_goals_per_game
+    assert_equal 2.03, GameTeam.average_goals_per_game
+  end
+
+  def test_most_goals_scored_by_team
+    assert_equal 3, GameTeam.most_goals_scored(15)
+    assert_equal 3, GameTeam.most_goals_scored(5)
+    assert_equal 3, GameTeam.most_goals_scored(7)
+  end
+
+  def test_fewest_goals_scored_by_team
+    assert_equal 1, GameTeam.fewest_goals_scored(15)
+    assert_equal 1, GameTeam.fewest_goals_scored(5)
+    assert_equal 1, GameTeam.fewest_goals_scored(7)
+  end
+
+  def test_average_win_percentage_for_team
+    assert_equal 50.00, GameTeam.average_win_percentage(5)
+    assert_equal 0, GameTeam.average_win_percentage(7)
   end
 
 end

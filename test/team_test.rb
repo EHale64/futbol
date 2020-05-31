@@ -35,4 +35,24 @@ class TeamTest < Minitest::Test
     assert_equal "BBVA Stadium", @team_1.stadium
     assert_equal "/api/v1/teams/3", @team_1.link
   end
+
+  def test_team_info
+    expected = {
+              team_id: 1,
+              franchiseId: 23,
+              teamName: "Atlanta United",
+              abbreviation: "ATL",
+              link: "/api/v1/teams/1"
+            }
+    assert_equal expected, Team.team_info(1)
+
+    expected = {
+              team_id: 28,
+              franchiseId: 29,
+              teamName: "Los Angeles FC",
+              abbreviation: "LFC",
+              link: "/api/v1/teams/28"
+            }
+    assert_equal expected, Team.team_info(28)
+  end
 end
