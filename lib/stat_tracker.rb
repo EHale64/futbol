@@ -231,6 +231,60 @@ class StatTracker
       team.team_id.to_i == least_accurate[0]
     end
     inaccurate_team.teamname
+  def team_info(team_id)
+    Team.team_info(team_id)
+  end
+
+  def most_goals_scored(team_id)
+    GameTeam.most_goals_scored(team_id)
+  end
+
+  def fewest_goals_scored(team_id)
+    GameTeam.fewest_goals_scored(team_id)
+  end
+
+  def average_win_percentage(team_id)
+    GameTeam.average_win_percentage(team_id)
+  end
+
+  def won_games_id(team_id)
+    team = @game_teams.find_all do |team|
+      team.team_id.to_i == team_id
+    end
+    game_wins = team.find_all do |info|
+      info.result == "WIN"
+    end
+    game_win_id = game_wins.map {|info| info.game_id}
+  end
+
+  def best_season(team_id)
+    winning_seasons = []
+    won_games_id(team_id).each do |game_id|
+      @games.each do |game|
+        if game.game_id == game_id
+          winning_seasons << game.season
+        end
+      end
+    end
+    win_season_hash = winning_seasons.group_by {|season| season}
+    max_seasons_by_win = win_season_hash.transform_values {|value| value.count}.invert.max
+    [max_seasons_by_win].to_h.values.reduce
+  end
+
+  def worst_season(team_id)
+    winning_seasons = []
+    won_games_id(team_id).each do |game_id|
+      @games.each do |game|
+        if game.game_id == game_id
+          winning_seasons << game.season
+        end
+      end
+    end
+    win_season_hash = winning_seasons.group_by {|season| season}
+    min_seasons_by_win = win_season_hash.transform_values {|value| value.count}.invert.min
+    [min_seasons_by_win].to_h.values.reduce
+  end
+
   end
 
   def find_wins_against_other_teams(team_name)
@@ -359,6 +413,103 @@ class StatTracker
       team_obj.teamname
     end
     all_rival_teams
+  end
+
+
+  def winningest_coach(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_coach = season_games.group_by do |game|
+      game.head_coach
+    end
+    wins = games_by_coach.transform_values do |array|
+      wins = array.sum do |game|
+        if game.result == "WIN"
+          1
+        else
+          0
+        end
+      end
+      wins.to_f / array.count
+    end
+    best_coach = wins.max_by do |coach, win_percent|
+      win_percent
+    end
+    best_coach[0]
+  end
+
+  def worst_coach(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_coach = season_games.group_by do |game|
+      game.head_coach
+    end
+    wins = games_by_coach.transform_values do |array|
+      wins = array.sum do |game|
+        if game.result == "WIN"
+          1
+        else
+          0
+        end
+      end
+      wins.to_f / array.count
+    end
+    worst_coach = wins.min_by do |coach, win_percent|
+      win_percent
+    end
+    worst_coach[0]
+  end
+
+  def most_tackles(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_team = season_games.group_by do |game|
+      game.team_id
+    end
+    games_by_team.transform_keys! do |team_id|
+      correct_team = @teams.find do |team|
+        team.team_id == team_id.to_s
+      end
+      correct_team.teamname
+    end
+    all_tackles = games_by_team.transform_values do |array|
+      tackles = array.sum do |game|
+        game.tackles
+      end
+      tackles
+    end
+    most_tackles = all_tackles.max_by do |team, tackles|
+      tackles
+    end
+    most_tackles[0]
+  end
+
+  def fewest_tackles(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_team = season_games.group_by do |game|
+      game.team_id
+    end
+    games_by_team.transform_keys! do |team_id|
+      correct_team = @teams.find do |team|
+        team.team_id == team_id.to_s
+      end
+      correct_team.teamname
+    end
+    all_tackles = games_by_team.transform_values do |array|
+      tackles = array.sum do |game|
+        game.tackles
+      end
+      tackles
+    end
+    least_tackles = all_tackles.min_by do |team, tackles|
+      tackles
+    end
+    least_tackles[0]
   end
 
 end
