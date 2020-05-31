@@ -52,102 +52,6 @@ class StatTracker
     GameTeam.percentage_away_wins
   end
 
-<<<<<<< HEAD
-  def winningest_coach(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    games_by_coach = season_games.group_by do |game|
-      game.head_coach
-    end
-    wins = games_by_coach.transform_values do |array|
-      wins = array.sum do |game|
-        if game.result == "WIN"
-          1
-        else
-          0
-        end
-      end
-      wins.to_f / array.count
-    end
-    best_coach = wins.max_by do |coach, win_percent|
-      win_percent
-    end
-    best_coach[0]
-  end
-
-  def worst_coach(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    games_by_coach = season_games.group_by do |game|
-      game.head_coach
-    end
-    wins = games_by_coach.transform_values do |array|
-      wins = array.sum do |game|
-        if game.result == "WIN"
-          1
-        else
-          0
-        end
-      end
-      wins.to_f / array.count
-    end
-    worst_coach = wins.min_by do |coach, win_percent|
-      win_percent
-    end
-    worst_coach[0]
-  end
-
-  def most_tackles(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    games_by_team = season_games.group_by do |game|
-      game.team_id
-    end
-    games_by_team.transform_keys! do |team_id|
-      correct_team = @teams.find do |team|
-        team.team_id == team_id.to_s
-      end
-      correct_team.teamname
-    end
-    all_tackles = games_by_team.transform_values do |array|
-      tackles = array.sum do |game|
-        game.tackles
-      end
-      tackles
-    end
-    most_tackles = all_tackles.max_by do |team, tackles|
-      tackles
-    end
-    most_tackles[0]
-  end
-
-  def fewest_tackles(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    games_by_team = season_games.group_by do |game|
-      game.team_id
-    end
-    games_by_team.transform_keys! do |team_id|
-      correct_team = @teams.find do |team|
-        team.team_id == team_id.to_s
-      end
-      correct_team.teamname
-    end
-    all_tackles = games_by_team.transform_values do |array|
-      tackles = array.sum do |game|
-        game.tackles
-      end
-      tackles
-    end
-    least_tackles = all_tackles.min_by do |team, tackles|
-      tackles
-    end
-    least_tackles[0]
-=======
   def self.percentage_ties
     ties = @game_teams.count do |team|
       team.result == "TIE"
@@ -382,5 +286,230 @@ class StatTracker
   end
 
   end
->>>>>>> 4c376fb2eb289dd98af625982b8bde0437a6d99d
+
+  def find_wins_against_other_teams(team_name)
+    team = @teams.find {|team| team.teamname == team_name }
+    team_id = team.team_id.to_i
+
+    team_wins = @game_teams.select do |game_team|
+      game_team.team_id == team_id && game_team.result == "WIN"
+    end
+    opponent_games_lost = team_wins.map do |game|
+      @game_teams.select do |game_team|
+        game_team.game_id == game.game_id
+      end
+    end.flatten
+    opponent_games_lost.reject! {|game_team| game_team.team_id == team_id}
+
+    losing_teams_game_count = {}
+    @teams.each do |team|
+      losing_teams_game_count[team.team_id.to_i] = []
+    end
+
+    opponent_games_lost.each do |game_team|
+        losing_teams_game_count[game_team.team_id] << game_team
+    end
+
+    losing_teams_game_count.each do |k,v|
+        losing_teams_game_count[k] = v.count
+    end
+
+  end
+
+  def find_losses_against_other_teams(team_name)
+    team = @teams.find {|team| team.teamname == team_name }
+    team_id = team.team_id.to_i
+
+    team_losses = @game_teams.select do |game_team|
+      game_team.team_id == team_id && game_team.result == "LOSS"
+    end
+
+    opponent_games_won = team_losses.map do |game|
+      @game_teams.select do |game_team|
+        game_team.game_id == game.game_id
+      end
+    end.flatten
+    opponent_games_won.reject! {|game_team| game_team.team_id == team_id}
+
+    winning_teams_game_count = {}
+    @teams.each do |team|
+      winning_teams_game_count[team.team_id.to_i] = []
+    end
+
+    opponent_games_won.each do |game_team|
+        winning_teams_game_count[game_team.team_id] << game_team
+    end
+
+    winning_teams_game_count.each {|k,v| winning_teams_game_count[k] = v.count}
+  end
+
+  def win_percentage_against_all_teams(team_name)
+    hash = {}
+    @teams.each do |team|
+      hash[team.team_id.to_i] = []
+    end
+
+    find_wins_against_other_teams(team_name).each do |k,v|
+      hash[k] << v
+    end
+
+    find_losses_against_other_teams(team_name).each do |k,v|
+      hash[k] << v
+    end
+
+    win_percentage_hash = hash.transform_values do |v|
+      if v[0] == 0 && v[1] == 0
+        "NA"
+      else
+         pct = v[0] / (v[0] + v[1]).to_f
+         pct = (pct * 100).round(2)
+      end
+    end
+  end
+
+  def favorite_opponent(team_name)
+    pct = win_percentage_against_all_teams(team_name)
+    pct.delete_if { |k,v| v.class == String}
+
+    highest_pct = pct.max_by { |k,v| v}[1]
+
+    all_favorites = pct.find_all do |k,v|
+      v == highest_pct
+    end
+
+    all_favorites = all_favorites.map do |team|
+      team.first
+    end
+
+    all_favorite_team_objects = all_favorites.map do |team_id|
+      @teams.find {|team| team.team_id.to_i == team_id }
+    end
+
+    all_favorite_teams = all_favorite_team_objects.map do |team_obj|
+      team_obj.teamname
+    end
+    all_favorite_teams
+  end
+
+  def rival(team_name)
+    pct = win_percentage_against_all_teams(team_name)
+    pct.delete_if { |k,v| v.class == String}
+
+    lowest_pct = pct.min_by { |k,v| v}[1]
+
+    all_rivals = pct.find_all do |k,v|
+      v == lowest_pct
+    end
+
+    all_rivals = all_rivals.map do |team|
+      team.first
+    end
+
+    all_rival_team_objects = all_rivals.map do |team_id|
+      @teams.find {|team| team.team_id.to_i == team_id }
+    end
+
+    all_rival_teams = all_rival_team_objects.map do |team_obj|
+      team_obj.teamname
+    end
+    all_rival_teams
+  end
+
+
+  def winningest_coach(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_coach = season_games.group_by do |game|
+      game.head_coach
+    end
+    wins = games_by_coach.transform_values do |array|
+      wins = array.sum do |game|
+        if game.result == "WIN"
+          1
+        else
+          0
+        end
+      end
+      wins.to_f / array.count
+    end
+    best_coach = wins.max_by do |coach, win_percent|
+      win_percent
+    end
+    best_coach[0]
+  end
+
+  def worst_coach(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_coach = season_games.group_by do |game|
+      game.head_coach
+    end
+    wins = games_by_coach.transform_values do |array|
+      wins = array.sum do |game|
+        if game.result == "WIN"
+          1
+        else
+          0
+        end
+      end
+      wins.to_f / array.count
+    end
+    worst_coach = wins.min_by do |coach, win_percent|
+      win_percent
+    end
+    worst_coach[0]
+  end
+
+  def most_tackles(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_team = season_games.group_by do |game|
+      game.team_id
+    end
+    games_by_team.transform_keys! do |team_id|
+      correct_team = @teams.find do |team|
+        team.team_id == team_id.to_s
+      end
+      correct_team.teamname
+    end
+    all_tackles = games_by_team.transform_values do |array|
+      tackles = array.sum do |game|
+        game.tackles
+      end
+      tackles
+    end
+    most_tackles = all_tackles.max_by do |team, tackles|
+      tackles
+    end
+    most_tackles[0]
+  end
+
+  def fewest_tackles(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    games_by_team = season_games.group_by do |game|
+      game.team_id
+    end
+    games_by_team.transform_keys! do |team_id|
+      correct_team = @teams.find do |team|
+        team.team_id == team_id.to_s
+      end
+      correct_team.teamname
+    end
+    all_tackles = games_by_team.transform_values do |array|
+      tackles = array.sum do |game|
+        game.tackles
+      end
+      tackles
+    end
+    least_tackles = all_tackles.min_by do |team, tackles|
+      tackles
+    end
+    least_tackles[0]
+  end
+
 end
