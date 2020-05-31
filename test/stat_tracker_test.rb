@@ -5,9 +5,12 @@ require'csv'
 class StatTrackerTest < Minitest::Test
   def setup
     @stat_tracker = StatTracker.from_csv({
-      games: "./test/fixtures/games_fixture.csv",
+      # games: "./test/fixtures/games_fixture.csv",
+      games: "./data/games.csv",
       teams: "./data/teams.csv",
-      game_teams: "./test/fixtures/game_teams_fixture.csv"})
+      # game_teams: "./test/fixtures/game_teams_fixture.csv"
+      game_teams: "./data/game_teams.csv",
+      })
   end
 
   def test_it_exists
@@ -92,14 +95,23 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_won_games_id_for_team
+    skip
     expected = [2014020906, 2016020610, 2017020301,
                 2016020560, 2017020953, 2017020058,
                 2013020835]
     assert_equal expected, @stat_tracker.won_games_id(15)
   end
 
-  def test_best_season
+  def test_best_and_worst_season
+    skip
     assert_equal "20172018", @stat_tracker.best_season(15)
+    assert_equal "20132014", @stat_tracker.worst_season(15)
   end
+
+  def test_best_and_worst_season_full
+    assert_equal "20152016", @stat_tracker.best_season(15)
+    assert_equal "20132014", @stat_tracker.worst_season(15)
+  end
+
 
 end
