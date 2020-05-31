@@ -29,11 +29,13 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_percentage_ties_is_found
+    skip
     assert_equal 43.75, @stat_tracker.percentage_ties
   end
 
 
   def test_it_can_get_games_by_season
+    skip
     expected = ({
                 "20172018" => 16,
                 "20132014" => 9,
@@ -43,11 +45,13 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_highest_and_lowest_total_game_score
+    skip
     assert_equal 7, @stat_tracker.highest_total_score
     assert_equal 1, @stat_tracker.lowest_total_score
   end
 
   def test_team_info
+    skip
     expected = {
               team_id: 1,
               franchiseId: 23,
@@ -68,20 +72,34 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_most_goals_scored_by_team
+    skip
     assert_equal 3, @stat_tracker.most_goals_scored(15)
     assert_equal 3, @stat_tracker.most_goals_scored(5)
     assert_equal 3, @stat_tracker.most_goals_scored(7)
   end
 
   def test_fewest_goals_scored_by_team
+    skip
     assert_equal 1, @stat_tracker.fewest_goals_scored(15)
     assert_equal 1, @stat_tracker.fewest_goals_scored(5)
     assert_equal 1, @stat_tracker.fewest_goals_scored(7)
   end
 
   def test_average_win_percentage_for_team
+    skip
     assert_equal 50.00, @stat_tracker.average_win_percentage(5)
     assert_equal 0, @stat_tracker.average_win_percentage(7)
+  end
+
+  def test_won_games_id_for_team
+    expected = [2014020906, 2016020610, 2017020301,
+                2016020560, 2017020953, 2017020058,
+                2013020835]
+    assert_equal expected, @stat_tracker.won_games_id(15)
+  end
+
+  def test_best_season
+    assert_equal "20172018", @stat_tracker.best_season(15)
   end
 
 end
