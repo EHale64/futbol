@@ -1,7 +1,6 @@
 require 'csv'
 require_relative '../test/test_helper'
 require_relative '../lib/game_team'
-require 'pry';
 
 class GameTeamTest < Minitest::Test
 
@@ -72,20 +71,6 @@ class GameTeamTest < Minitest::Test
     assert_equal 6, @game_team_2.takeaways
   end
 
-  def test_it_can_find_tie_percentage
-    assert_equal 43.75, GameTeam.percentage_ties
-  end
-
-  def test_it_can_calculate_percentage_home_wins
-    assert_equal 31.25, @game_team.percentage_home_wins
-  end
-
-  def test_it_can_calculate_percentage_home_wins
-    assert_equal 25.00, @game_team.percentage_away_wins
-  end
-
-  def test_it_can_average_goals
-    assert_equal 2.03, @game_team.average_goals_per_game
-  end
+  
 
 end
