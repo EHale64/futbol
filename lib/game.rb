@@ -49,7 +49,7 @@ class Game
     scores.min
   end
 
-  def average_goals_by_season
+  def self.average_goals_by_season
     grouping = @@accumulator.group_by do |game|
       game.season
     end

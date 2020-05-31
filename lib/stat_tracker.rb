@@ -327,6 +327,60 @@ class StatTracker
       team.team_id.to_i == least_accurate[0]
     end
     inaccurate_team.teamname
->>>>>>> c171d6d2af8a1aa496b9829f5debb2cabac0c7b5
+  def team_info(team_id)
+    Team.team_info(team_id)
   end
+
+  def most_goals_scored(team_id)
+    GameTeam.most_goals_scored(team_id)
+  end
+
+  def fewest_goals_scored(team_id)
+    GameTeam.fewest_goals_scored(team_id)
+  end
+
+  def average_win_percentage(team_id)
+    GameTeam.average_win_percentage(team_id)
+  end
+
+  def won_games_id(team_id)
+    team = @game_teams.find_all do |team|
+      team.team_id.to_i == team_id
+    end
+    game_wins = team.find_all do |info|
+      info.result == "WIN"
+    end
+    game_win_id = game_wins.map {|info| info.game_id}
+  end
+
+  def best_season(team_id)
+    winning_seasons = []
+    won_games_id(team_id).each do |game_id|
+      @games.each do |game|
+        if game.game_id == game_id
+          winning_seasons << game.season
+        end
+      end
+    end
+    win_season_hash = winning_seasons.group_by {|season| season}
+    max_seasons_by_win = win_season_hash.transform_values {|value| value.count}.invert.max
+    [max_seasons_by_win].to_h.values.reduce
+  end
+
+  def worst_season(team_id)
+    winning_seasons = []
+    won_games_id(team_id).each do |game_id|
+      @games.each do |game|
+        if game.game_id == game_id
+          winning_seasons << game.season
+        end
+      end
+    end
+    win_season_hash = winning_seasons.group_by {|season| season}
+    min_seasons_by_win = win_season_hash.transform_values {|value| value.count}.invert.min
+    [min_seasons_by_win].to_h.values.reduce
+  end
+
+  end
+>>>>>>> 4c376fb2eb289dd98af625982b8bde0437a6d99d
 end

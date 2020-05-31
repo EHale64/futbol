@@ -7,7 +7,8 @@ class StatTrackerTest < Minitest::Test
     @stat_tracker = StatTracker.from_csv({
       games: "./test/fixtures/games_fixture.csv",
       teams: "./data/teams.csv",
-      game_teams: "./test/fixtures/game_teams_fixture.csv"})
+      game_teams: "./test/fixtures/game_teams_fixture.csv"
+      })
   end
 
   def test_it_exists
@@ -28,9 +29,9 @@ class StatTrackerTest < Minitest::Test
     assert_equal 32, @stat_tracker.count_of_teams
   end
 
-  # def test_percentage_ties_is_found
-  #   assert_equal 43.75, GameTeam.percentage_ties
-  # end
+  def test_percentage_ties_is_found
+    assert_equal 43.75, @stat_tracker.percentage_ties
+  end
 
 
   def test_it_can_get_games_by_season
@@ -104,6 +105,56 @@ end
 
   def test_it_can_find_least_accurate_team
     assert_equal "Philadelphia Union", @stat_tracker.least_accurate_team("20132014")
->>>>>>> c171d6d2af8a1aa496b9829f5debb2cabac0c7b5
+  def test_team_info
+    expected = {
+              team_id: 1,
+              franchiseId: 23,
+              teamName: "Atlanta United",
+              abbreviation: "ATL",
+              link: "/api/v1/teams/1"
+            }
+    assert_equal expected, @stat_tracker.team_info(1)
+
+    expected = {
+              team_id: 28,
+              franchiseId: 29,
+              teamName: "Los Angeles FC",
+              abbreviation: "LFC",
+              link: "/api/v1/teams/28"
+            }
+    assert_equal expected, @stat_tracker.team_info(28)
+  end
+
+  def test_most_goals_scored_by_team
+    assert_equal 3, @stat_tracker.most_goals_scored(15)
+    assert_equal 3, @stat_tracker.most_goals_scored(5)
+    assert_equal 3, @stat_tracker.most_goals_scored(7)
+  end
+
+  def test_fewest_goals_scored_by_team
+    assert_equal 1, @stat_tracker.fewest_goals_scored(15)
+    assert_equal 1, @stat_tracker.fewest_goals_scored(5)
+    assert_equal 1, @stat_tracker.fewest_goals_scored(7)
+  end
+
+  def test_average_win_percentage_for_team
+    assert_equal 50.00, @stat_tracker.average_win_percentage(5)
+    assert_equal 0, @stat_tracker.average_win_percentage(7)
+  end
+
+  def test_won_games_id_for_team
+    expected = [2014020906, 2016020610, 2017020301,
+                2016020560, 2017020953, 2017020058,
+                2013020835]
+    assert_equal expected, @stat_tracker.won_games_id(15)
+  end
+
+  def test_best_and_worst_season_full_csv
+    skip
+    assert_equal "20152016", @stat_tracker.best_season(15)
+    assert_equal "20132014", @stat_tracker.worst_season(15)
+  end
+
+
   end
 end

@@ -26,4 +26,16 @@ class Team
   def self.accumulator
     @@accumulator
   end
+
+  def self.team_info(team_id)
+    team = @@accumulator.find_all do |team|
+      team.team_id.to_i == team_id
+    end
+    team_info = {
+      team_id: team.reduce.team_id.to_i,
+      franchiseId: team.reduce.franchiseid.to_i,
+      teamName: team.reduce.teamname,
+      abbreviation: team.reduce.abbreviation,
+      link: team.reduce.link}
+  end
 end
