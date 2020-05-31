@@ -68,4 +68,40 @@ class StatTracker
   def average_win_percentage(team_id)
     GameTeam.average_win_percentage(team_id)
   end
+
+  def won_games_id(team_id)
+    team = @game_teams.find_all do |team|
+      team.team_id.to_i == team_id
+    end
+    game_wins = team.find_all do |info|
+      info.result == "WIN"
+    end
+    game_win_id = game_wins.map {|info| info.game_id}
+  end
+
+  def best_season(team_id)
+    winning_seasons = []
+    won_games_id(team_id).each do |game_id|
+      @games.each do |game|
+        if game.game_id == game_id
+          winning_seasons << game.season
+        end
+      end
+    end
+    win_season_hash = winning_seasons.group_by {|season| season}
+    win_season_hash.transform_values {|value| value.count}.max[0]
+  end
+
+  def worst_season(team_id)
+    winning_seasons = []
+    won_games_id(team_id).each do |game_id|
+      @games.each do |game|
+        if game.game_id == game_id
+          winning_seasons << game.season
+        end
+      end
+    end
+    win_season_hash = winning_seasons.group_by {|season| season}
+    win_season_hash.transform_values {|value| value.count}.min[0]
+
 end
