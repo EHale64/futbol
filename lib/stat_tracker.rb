@@ -336,55 +336,38 @@ end
     GameTeam.fewest_goals_scored(team_id)
   end
 
-  def favorite_opponent(team_name)
-    pct = win_percentage_against_all_teams(team_name)
-    pct.delete_if { |k,v| v.class == String}
+  def find_all_rival_or_favorite_opponents(all_teams)
+    all_teams = all_teams.map do |team|
+      team.first
+    end
 
+    all_team_objects = all_teams.map do |team_id|
+      @teams.find {|team| team.team_id.to_i == team_id }
+    end
+
+    all_team_objects.map do |team_obj|
+      team_obj.teamname
+    end.first
+  end
+
+  def favorite_opponent(team_id)
+    pct = win_percentage_against_all_teams(team_id)
     highest_pct = pct.max_by { |k,v| v}[1]
-
-    all_favorites = pct.find_all do |k,v|
+    all_teams = pct.find_all do |k,v|
       v == highest_pct
     end
-
-    all_favorites = all_favorites.map do |team|
-      team.first
-    end
-
-    all_favorite_team_objects = all_favorites.map do |team_id|
-      @teams.find {|team| team.team_id.to_i == team_id }
-    end
-
-    all_favorite_teams = all_favorite_team_objects.map do |team_obj|
-      team_obj.teamname
-    end
-    all_favorite_teams
+    find_all_rival_or_favorite_opponents(all_teams)
   end
 
-  def rival(team_name)
-    pct = win_percentage_against_all_teams(team_name)
-    pct.delete_if { |k,v| v.class == String}
-
+  def rival(team_id)
+    pct = win_percentage_against_all_teams(team_id)
     lowest_pct = pct.min_by { |k,v| v}[1]
-
-    all_rivals = pct.find_all do |k,v|
+    all_teams = pct.find_all do |k,v|
       v == lowest_pct
     end
-
-    all_rivals = all_rivals.map do |team|
-      team.first
-    end
-
-    all_rival_team_objects = all_rivals.map do |team_id|
-      @teams.find {|team| team.team_id.to_i == team_id }
-    end
-
-    all_rival_teams = all_rival_team_objects.map do |team_obj|
-      team_obj.teamname
-    end
-    all_rival_teams
+    find_all_rival_or_favorite_opponents(all_teams)
   end
 
-  #helper methods
   def won_games_id(given_team_id)
     team = @game_teams.find_all do |team|
       team.team_id.to_i == given_team_id
@@ -395,9 +378,8 @@ end
     game_win_id = game_wins.map {|info| info.game_id}
   end
 
-  def find_wins_against_other_teams(team_name)
-    team = @teams.find {|team| team.teamname == team_name }
-    team_id = team.team_id.to_i
+  def find_wins_against_other_teams(team_id)
+    team_id = team_id.to_i
 
     team_wins = @game_teams.select do |game_team|
       game_team.team_id == team_id && game_team.result == "WIN"
@@ -423,9 +405,8 @@ end
     end
   end
 
-  def find_losses_against_other_teams(team_name)
-    team = @teams.find {|team| team.teamname == team_name }
-    team_id = team.team_id.to_i
+  def find_losses_against_other_teams(team_id)
+    team_id = team_id.to_i
     team_losses = @game_teams.select do |game_team|
       game_team.team_id == team_id && game_team.result == "LOSS"
     end
@@ -449,27 +430,26 @@ end
     winning_teams_game_count.each {|k,v| winning_teams_game_count[k] = v.count}
   end
 
-  def win_percentage_against_all_teams(team_name)
-    hash = {}
+  def win_percentage_against_all_teams(team_id)
+    win_percentage = {}
     @teams.each do |team|
-      hash[team.team_id.to_i] = []
+      win_percentage[team.team_id.to_i] = []
     end
 
-    find_wins_against_other_teams(team_name).each do |k,v|
-      hash[k] << v
+    find_wins_against_other_teams(team_id).each do |k,v|
+      win_percentage[k] << v
     end
 
-    find_losses_against_other_teams(team_name).each do |k,v|
-      hash[k] << v
+    find_losses_against_other_teams(team_id).each do |k,v|
+      win_percentage[k] << v
     end
 
-    win_percentage_hash = hash.transform_values do |v|
-      if v[0] == 0 && v[1] == 0
-        "NA"
-      else
-        pct = v[0] / (v[0] + v[1]).to_f
-        pct = (pct * 100).round(2)
-      end
+    relevant = win_percentage.delete_if do |k,v|
+      v[0] == 0 && v[1] == 0
+    end
+
+    relevant.transform_values do |v|
+        pct = (v[0] / (v[0] + v[1]).to_f)*100.round(2)
     end
   end
 
