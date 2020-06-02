@@ -66,25 +66,25 @@ class GameTeam
  end
 
  def self.most_goals_scored(team_id)
-   team = @@accumulator.find_all do |team|
-     team.team_id.to_i == team_id
+   team = @@accumulator.find_all do |team| #use method in module
+     team.team_id.to_i == team_id.to_i
    end
    team.map {|info| info.goals}.max
  end
 
  def self.fewest_goals_scored(team_id)
    team = @@accumulator.find_all do |team|
-     team.team_id.to_i == team_id
+     team.team_id.to_i == team_id.to_i
    end
    team.map {|info| info.goals}.min
  end
 
  def self.average_win_percentage(team_id)
    team = @@accumulator.find_all do |team|
-     team.team_id.to_i == team_id
+     team.team_id.to_i == team_id.to_i
    end
    team_wins = team.find_all {|info| info.result == "WIN"}
-   (team_wins.count.to_f/team.count.to_f) * 100
+   (team_wins.count.to_f/team.count.to_f).round(2)
  end
 
 end
