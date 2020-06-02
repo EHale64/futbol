@@ -292,9 +292,9 @@ def fewest_tackles(season)
 end
 
 # team info
-def team_info(team_id)
-  Team.team_info(team_id)
-end
+  def team_info(team_id)
+    Team.team_info(team_id)
+  end
 
   def best_season(team_id)
     winning_seasons = []
@@ -315,7 +315,7 @@ end
     won_games_id(team_id).each do |game_id|
       @games.each do |game|
         if game.game_id == game_id
-          winning_seasons << game.season
+            winning_seasons << game.season
         end
       end
     end
@@ -365,16 +365,25 @@ end
     all_teams = pct.find_all do |k,v|
       v == lowest_pct
     end
-    find_all_rival_or_favorite_opponents(all_teams)
+
+    all_rivals = all_rivals.map do |team|
+      team.first
+    end
+
+    all_rival_team_objects = all_rivals.map do |team_id|
+      @teams.find {|team| team.team_id.to_i == team_id }
+    end
+
+    all_rival_teams = all_rival_team_objects.map do |team_obj|
+      team_obj.teamname
+    end
+    all_rival_teams.first
   end
 
-  def won_games_id(given_team_id)
-    team = @game_teams.find_all do |team|
-      team.team_id.to_i == given_team_id
-    end
-    game_wins = team.find_all do |info|
-      info.result == "WIN"
-    end
+  #helper methods
+  def won_games_id(given_team_id) #used to help best/worst season
+    team = @game_teams.find_all {|team| team.team_id.to_i == given_team_id.to_i}
+    game_wins = team.find_all {|info| info.result == "WIN"}
     game_win_id = game_wins.map {|info| info.game_id}
   end
 
