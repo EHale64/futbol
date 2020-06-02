@@ -70,8 +70,7 @@ class StatTracker
     goals = @game_teams.sum do |game|
       game.goals
     end
-    # (goals.sum.to_f / @game_teams.count).round(2)
-    small_average(goals, @game_teams.count)
+    (goals.sum.to_f / (@game_teams.count/2)).round(2)
   end
 
   def average_goals_by_season
@@ -189,51 +188,19 @@ class StatTracker
     team.teamname
   end
 
-  #season stats
-  def winningest_coach(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    games_by_coach = season_games.group_by do |game|
-      game.head_coach
-    end
-    wins = games_by_coach.transform_values do |array|
-      wins = array.sum do |game|
-        if game.result == "WIN"
-          1
-        else
-          0
-        end
-      end
-      wins.to_f / array.count
-    end
-    best_coach = wins.max_by do |coach, win_percent|
-      win_percent
-    end
-    best_coach[0]
+
+#season stats
+def winningest_coach(season)
+   wins = group_wins(games_by_coach(season))
+  best_coach = wins.max_by do |coach, win_percent|
+    win_percent
   end
 
-  def worst_coach(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    games_by_coach = season_games.group_by do |game|
-      game.head_coach
-    end
-    wins = games_by_coach.transform_values do |array|
-      wins = array.sum do |game|
-        if game.result == "WIN"
-          1
-        else
-          0
-        end
-      end
-      wins.to_f / array.count
-    end
-    worst_coach = wins.min_by do |coach, win_percent|
-      win_percent
-    end
-    worst_coach[0]
+
+def worst_coach(season)
+   wins = group_wins(games_by_coach(season))
+  worst_coach = wins.min_by do |coach, win_percent|
+    win_percent
   end
 
   def most_accurate_team(season)
@@ -264,9 +231,15 @@ class StatTracker
     inaccurate_team.teamname
   end
 
-  def most_tackles(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
+
+def most_tackles(season)
+  season_games = seasonal_team_games(season)
+  games_by_team = season_games.group_by do |game|
+    game.team_id
+  end
+  games_by_team.transform_keys! do |team_id|
+    correct_team = @teams.find do |team|
+      team.team_id == team_id.to_s
     end
     games_by_team = season_games.group_by do |game|
       game.team_id
@@ -289,9 +262,14 @@ class StatTracker
     most_tackles[0]
   end
 
-  def fewest_tackles(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
+def fewest_tackles(season)
+  season_games = seasonal_team_games(season)
+  games_by_team = season_games.group_by do |game|
+    game.team_id
+  end
+  games_by_team.transform_keys! do |team_id|
+    correct_team = @teams.find do |team|
+      team.team_id == team_id.to_s
     end
     games_by_team = season_games.group_by do |game|
       game.team_id
@@ -492,6 +470,25 @@ class StatTracker
   def seasonal_team_games(season)
     seasonal_game_ids = games_by_season[season].map { |game| game.game_id }
     @game_teams.find_all { |team| seasonal_game_ids.include?(team.game_id) }
+  end
+
+  def group_wins(games_by_coach)
+    games_by_coach.transform_values do |array|
+      wins = array.sum do |game|
+        if game.result == "WIN"
+          1
+        else
+          0
+        end
+      end
+      wins.to_f / array.count
+    end
+  end
+
+  def games_by_coach(season)
+    seasonal_team_games(season).group_by do |game|
+      game.head_coach
+    end
   end
 
   def offense

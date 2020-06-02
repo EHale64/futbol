@@ -1,15 +1,13 @@
-require_relative'../test/test_helper'
-require_relative'../lib/stat_tracker'
+require'./test/test_helper'
+require'./lib/stat_tracker'
 require'csv'
-require 'pry'
 
 class StatTrackerTest < Minitest::Test
   def setup
     @stat_tracker = StatTracker.from_csv({
       games: "./test/fixtures/games_fixture.csv",
       teams: "./data/teams.csv",
-      game_teams: "./test/fixtures/game_teams_fixture.csv"
-      })
+      game_teams: "./test/fixtures/game_teams_fixture.csv"})
   end
 
   def test_it_exists
@@ -53,7 +51,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_average_goals
-    assert_equal 2.03, @stat_tracker.average_goals_per_game
+    assert_equal 4.06, @stat_tracker.average_goals_per_game
   end
 
   def test_average_goals_by_season
@@ -70,11 +68,10 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_best_offense
-    assert_equal "Washington Spirit FC", @stat_tracker.best_offense
+  assert_equal "Washington Spirit FC", @stat_tracker.best_offense
   end
 
   def test_it_can_find_worst_offense
-    assert_equal "Philadelphia Union", @stat_tracker.worst_offense
   end
 
   def test_it_can_find_highest_scoring_visitor
@@ -89,13 +86,17 @@ class StatTrackerTest < Minitest::Test
     assert_equal "Philadelphia Union", @stat_tracker.lowest_scoring_visitor
   end
 
-  def test_it_can_find_lowest_scoring_home_team
-    assert_equal "Montreal Impact", @stat_tracker.lowest_scoring_home_team
-  end
+def test_it_can_find_lowest_scoring_visitor
+  assert_equal "Philadelphia Union", @stat_tracker.lowest_scoring_visitor
+end
+
+def test_it_can_find_lowest_scoring_home_team
+  assert_equal "Montreal Impact", @stat_tracker.lowest_scoring_home_team
+end
 
   def test_coach_win_rate
-    assert_equal "Craig Berube", @stat_tracker.winningest_coach("2013")
-    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("2013")
+    assert_equal "John Tortorella", @stat_tracker.winningest_coach("20132014")
+    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("20132014")
   end
 
   def test_it_can_find_most_accurate_team
@@ -107,8 +108,8 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_tackle_volume_by_season
-    assert_equal "North Carolina Courage", @stat_tracker.most_tackles("2013")
-    assert_equal "Portland Timbers", @stat_tracker.fewest_tackles("2013")
+    assert_equal "Real Salt Lake", @stat_tracker.most_tackles("20132014")
+    assert_equal "Montreal Impact", @stat_tracker.fewest_tackles("20132014")
   end
 
   def test_team_info
