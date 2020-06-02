@@ -111,7 +111,6 @@ class StatTracker
 
   def highest_scoring_visitor
     grouped = Hash.new{|hash, key| hash[key] = []}
-
     away_games = @game_teams.select do |game_team|
       game_team.hoa == "away"
     end
@@ -131,7 +130,6 @@ class StatTracker
 
   def highest_scoring_home_team
     grouped = Hash.new{|hash, key| hash[key] = []}
-
     home_games = @game_teams.select do |game_team|
       game_team.hoa == "home"
     end
@@ -151,7 +149,6 @@ class StatTracker
 
   def lowest_scoring_visitor
     grouped = Hash.new{|hash, key| hash[key] = []}
-
     away_games = @game_teams.select do |game_team|
       game_team.hoa == "away"
     end
@@ -171,7 +168,6 @@ class StatTracker
 
   def lowest_scoring_home_team
     grouped = Hash.new{|hash, key| hash[key] = []}
-
     home_games = @game_teams.select do |game_team|
       game_team.hoa == "home"
     end
