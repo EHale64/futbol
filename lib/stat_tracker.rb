@@ -246,9 +246,7 @@ def least_accurate_team(season)
 end
 
 def most_tackles(season)
-  season_games = @game_teams.find_all do |game|
-    game.game_id.to_s[0..3] == season
-  end
+  season_games = seasonal_team_games(season)
   games_by_team = season_games.group_by do |game|
     game.team_id
   end
@@ -500,13 +498,9 @@ end
   end
 
   def games_by_coach(season)
-    season_games = @game_teams.find_all do |game|
-      game.game_id.to_s[0..3] == season
-    end
-    coach_grouping = season_games.group_by do |game|
+    seasonal_team_games(season).group_by do |game|
       game.head_coach
     end
-    coach_grouping
   end
 
 end

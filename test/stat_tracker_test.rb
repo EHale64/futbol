@@ -95,8 +95,8 @@ def test_it_can_find_lowest_scoring_home_team
 end
 
   def test_coach_win_rate
-    assert_equal "Craig Berube", @stat_tracker.winningest_coach("2013")
-    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("2013")
+    assert_equal "John Tortorella", @stat_tracker.winningest_coach("20132014")
+    assert_equal "Ken Hitchcock", @stat_tracker.worst_coach("20132014")
   end
 
   def test_it_can_find_most_accurate_team
@@ -108,7 +108,7 @@ end
   end
 
   def test_tackle_volume_by_season
-    assert_equal "North Carolina Courage", @stat_tracker.most_tackles("2013")
+    assert_equal "Real Salt Lake", @stat_tracker.most_tackles("20132014")
     assert_equal "Portland Timbers", @stat_tracker.fewest_tackles("2013")
   end
 
