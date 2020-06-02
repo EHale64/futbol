@@ -113,33 +113,23 @@ class StatTrackerTest < Minitest::Test
 
   def test_team_info
     expected = {
-              team_id: 1,
-              franchiseId: 23,
-              teamName: "Atlanta United",
-              abbreviation: "ATL",
-              link: "/api/v1/teams/1"
+              "team_id" => "1",
+              "franchise_id" => "23",
+              "team_name" => "Atlanta United",
+              "abbreviation" => "ATL",
+              "link" => "/api/v1/teams/1"
             }
-    assert_equal expected, @stat_tracker.team_info(1)
-
-    expected = {
-              team_id: 28,
-              franchiseId: 29,
-              teamName: "Los Angeles FC",
-              abbreviation: "LFC",
-              link: "/api/v1/teams/28"
-            }
-    assert_equal expected, @stat_tracker.team_info(28)
+    assert_equal expected, @stat_tracker.team_info("1")
   end
 
   def test_best_and_worst_season_full_csv
     skip
-    assert_equal "20152016", @stat_tracker.best_season(15)
-    assert_equal "20132014", @stat_tracker.worst_season(15)
+    assert_equal "20122013", @stat_tracker.best_season(15)
+    assert_equal "20152016", @stat_tracker.worst_season(15)
   end
 
   def test_average_win_percentage_for_team
-    assert_equal 50.00, @stat_tracker.average_win_percentage(5)
-    assert_equal 0, @stat_tracker.average_win_percentage(7)
+    assert_equal 0.50, @stat_tracker.average_win_percentage("5")
   end
 
   def test_most_goals_scored_by_team
