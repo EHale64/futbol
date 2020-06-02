@@ -202,22 +202,7 @@ end
 
 #season stats
 def winningest_coach(season)
-  season_games = @game_teams.find_all do |game|
-    game.game_id.to_s[0..3] == season
-  end
-  games_by_coach = season_games.group_by do |game|
-    game.head_coach
-  end
-  wins = games_by_coach.transform_values do |array|
-    wins = array.sum do |game|
-      if game.result == "WIN"
-        1
-      else
-        0
-      end
-    end
-    wins.to_f / array.count
-  end
+   wins = group_wins(games_by_coach(season))
   best_coach = wins.max_by do |coach, win_percent|
     win_percent
   end
@@ -225,22 +210,7 @@ def winningest_coach(season)
 end
 
 def worst_coach(season)
-  season_games = @game_teams.find_all do |game|
-    game.game_id.to_s[0..3] == season
-  end
-  games_by_coach = season_games.group_by do |game|
-    game.head_coach
-  end
-  wins = games_by_coach.transform_values do |array|
-    wins = array.sum do |game|
-      if game.result == "WIN"
-        1
-      else
-        0
-      end
-    end
-    wins.to_f / array.count
-  end
+   wins = group_wins(games_by_coach(season))
   worst_coach = wins.min_by do |coach, win_percent|
     win_percent
   end
@@ -515,4 +485,28 @@ end
     seasonal_game_ids = games_by_season[season].map { |game| game.game_id }
     @game_teams.find_all { |team| seasonal_game_ids.include?(team.game_id) }
   end
+
+  def group_wins(games_by_coach)
+    games_by_coach.transform_values do |array|
+      wins = array.sum do |game|
+        if game.result == "WIN"
+          1
+        else
+          0
+        end
+      end
+      wins.to_f / array.count
+    end
+  end
+
+  def games_by_coach(season)
+    season_games = @game_teams.find_all do |game|
+      game.game_id.to_s[0..3] == season
+    end
+    coach_grouping = season_games.group_by do |game|
+      game.head_coach
+    end
+    coach_grouping
+  end
+
 end
