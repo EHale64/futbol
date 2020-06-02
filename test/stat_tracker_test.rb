@@ -113,33 +113,23 @@ class StatTrackerTest < Minitest::Test
 
   def test_team_info
     expected = {
-              team_id: 1,
-              franchiseId: 23,
-              teamName: "Atlanta United",
-              abbreviation: "ATL",
-              link: "/api/v1/teams/1"
+              "team_id" => "1",
+              "franchise_id" => "23",
+              "team_name" => "Atlanta United",
+              "abbreviation" => "ATL",
+              "link" => "/api/v1/teams/1"
             }
-    assert_equal expected, @stat_tracker.team_info(1)
-
-    expected = {
-              team_id: 28,
-              franchiseId: 29,
-              teamName: "Los Angeles FC",
-              abbreviation: "LFC",
-              link: "/api/v1/teams/28"
-            }
-    assert_equal expected, @stat_tracker.team_info(28)
+    assert_equal expected, @stat_tracker.team_info("1")
   end
 
   def test_best_and_worst_season_full_csv
     skip
-    assert_equal "20152016", @stat_tracker.best_season(15)
-    assert_equal "20132014", @stat_tracker.worst_season(15)
+    assert_equal "20122013", @stat_tracker.best_season(15)
+    assert_equal "20152016", @stat_tracker.worst_season(15)
   end
 
   def test_average_win_percentage_for_team
-    assert_equal 50.00, @stat_tracker.average_win_percentage(5)
-    assert_equal 0, @stat_tracker.average_win_percentage(7)
+    assert_equal 0.50, @stat_tracker.average_win_percentage("5")
   end
 
   def test_most_goals_scored_by_team
@@ -155,11 +145,11 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_favorite_opponent
-    assert_equal ["Philadelphia Union"], @stat_tracker.favorite_opponent("Montreal Impact")
+    assert_equal "Philadelphia Union", @stat_tracker.favorite_opponent("23")
   end
 
   def test_it_can_find_rivals
-    assert_equal ["North Carolina Courage"], @stat_tracker.rival("Montreal Impact")
+    assert_equal "North Carolina Courage", @stat_tracker.rival("23")
   end
 
   def test_won_games_id_for_team
@@ -185,7 +175,7 @@ class StatTrackerTest < Minitest::Test
                 20=>0, 21=>0, 25=>0, 13=>0,
                 10=>0, 29=>0, 52=>0, 54=>0,
                 12=>0, 7=>0, 22=>0, 53=>0 }
-    assert_equal expected, @stat_tracker.find_wins_against_other_teams("Montreal Impact")
+    assert_equal expected, @stat_tracker.find_wins_against_other_teams("23")
   end
 
   def test_it_can_track_losses_against_other_teams
@@ -197,19 +187,18 @@ class StatTrackerTest < Minitest::Test
                 20=>0, 21=>0, 25=>0, 13=>0,
                 10=>1, 29=>0, 52=>0, 54=>0,
                 12=>0, 7=>0, 22=>0, 53=>0 }
-    assert_equal expected, @stat_tracker.find_losses_against_other_teams("Montreal Impact")
+    assert_equal expected, @stat_tracker.find_losses_against_other_teams("23")
   end
 
   def test_it_can_find_winning_percentage_against_all_teams
-    expected = { 1=>"NA", 4=>"NA", 26=>"NA", 14=>"NA",
-                6=>"NA", 3=>"NA", 5=>"NA", 17=>"NA",
-                28=>"NA", 18=>"NA", 23=>"NA", 16=>"NA",
-                9=>"NA", 8=>"NA", 30=>"NA", 15=>"NA",
-                19=>100.0, 24=>"NA", 27=>"NA", 2=>"NA",
-                20=>"NA", 21=>"NA", 25=>"NA", 13=>"NA",
-                10=>0.0, 29=>"NA", 52=>"NA", 54=>"NA",
-                12=>"NA", 7=>"NA", 22=>"NA", 53=>"NA" }
-    assert_equal expected, @stat_tracker.win_percentage_against_all_teams("Montreal Impact")
+    expected = { 19=>100.0, 10=>0.0 }
+    assert_equal expected, @stat_tracker.win_percentage_against_all_teams("23")
+  end
+
+  def test_it_can_find_all_rival_or_favorite_opponents
+    expected = "Toronto FC"
+    argument = {20 => 0.5}
+    assert_equal expected, @stat_tracker.find_all_rival_or_favorite_opponents(argument)
   end
 
   def test_it_can_get_games_by_season
