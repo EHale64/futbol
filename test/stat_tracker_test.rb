@@ -51,7 +51,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_average_goals
-    assert_equal 2.03, @stat_tracker.average_goals_per_game
+    assert_equal 4.06, @stat_tracker.average_goals_per_game
   end
 
   def test_average_goals_by_season
@@ -109,7 +109,7 @@ end
 
   def test_tackle_volume_by_season
     assert_equal "Real Salt Lake", @stat_tracker.most_tackles("20132014")
-    assert_equal "Portland Timbers", @stat_tracker.fewest_tackles("2013")
+    assert_equal "Montreal Impact", @stat_tracker.fewest_tackles("20132014")
   end
 
   def test_team_info

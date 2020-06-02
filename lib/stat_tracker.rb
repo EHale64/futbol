@@ -65,7 +65,7 @@ class StatTracker
     goals = @game_teams.map do |game|
       game.goals
     end
-    (goals.sum.to_f / @game_teams.count).round(2)
+    (goals.sum.to_f / (@game_teams.count/2)).round(2)
   end
 
   def average_goals_by_season
@@ -269,9 +269,7 @@ def most_tackles(season)
 end
 
 def fewest_tackles(season)
-  season_games = @game_teams.find_all do |game|
-    game.game_id.to_s[0..3] == season
-  end
+  season_games = seasonal_team_games(season)
   games_by_team = season_games.group_by do |game|
     game.team_id
   end
