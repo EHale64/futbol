@@ -37,22 +37,11 @@ class TeamTest < Minitest::Test
   end
 
   def test_team_info
-    expected = {
-              team_id: 1,
-              franchiseId: 23,
-              teamName: "Atlanta United",
-              abbreviation: "ATL",
-              link: "/api/v1/teams/1"
-            }
-    assert_equal expected, Team.team_info(1)
-
-    expected = {
-              team_id: 28,
-              franchiseId: 29,
-              teamName: "Los Angeles FC",
-              abbreviation: "LFC",
-              link: "/api/v1/teams/28"
-            }
-    assert_equal expected, Team.team_info(28)
+    expected = {"team_id"=>"1",
+                "franchise_id"=>"23",
+                "team_name"=>"Atlanta United",
+                "abbreviation"=>"ATL",
+                "link"=>"/api/v1/teams/1" }
+    assert_equal expected, Team.team_info("1")
   end
 end

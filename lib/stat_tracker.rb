@@ -38,8 +38,6 @@ class StatTracker
     home_wins = @game_teams.count do |game_team|
       game_team.result == "WIN" && game_team.hoa == "home"
     end
-    # result = (home_wins.to_f / (@game_teams.count/2))*100
-    # result.round(2
     average(home_wins, @game_teams.count/2)
   end
 
@@ -47,17 +45,11 @@ class StatTracker
     away_wins = @game_teams.count do |game_team|
       game_team.result == "WIN" && game_team.hoa == "away"
     end
-    # result = (away_wins.to_f / (@game_teams.count/2))*100
-    # result.round(2)
     average(away_wins, @game_teams.count/2)
   end
 
   def percentage_ties
-    ties = @game_teams.count do |team|
-      team.result == "TIE"
-    end
-    # result = (ties.to_f / @game_teams.count)*100
-    # result.round(2)
+    ties = @game_teams.count { |team| team.result == "TIE" }
     average(ties, @game_teams.length)
   end
 
@@ -67,23 +59,18 @@ class StatTracker
   end
 
   def average_goals_per_game
-    goals = @game_teams.sum do |game|
-      game.goals
-    end
-    (goals.sum.to_f / (@game_teams.count/2)).round(2)
+    goals = @game_teams.sum { |game| game.goals }
+    small_average(goals, @game_teams.count/2)
   end
 
   def average_goals_by_season
-    grouping = @games.group_by do |game|
-      game.season
-    end
+    grouping = @games.group_by { |game| game.season }
     season_goals = grouping.transform_values do |games|
       games.map do |game|
         game.home_goals.to_f + game.away_goals
       end
     end
     season_goals.transform_values do |goals|
-      # (goals.sum / goals.count).round(2)
       small_average(goals.sum, goals.count)
     end
   end
@@ -116,7 +103,6 @@ class StatTracker
     away_games.each do |game_team|
       grouped[game_team.team_id] << game_team.goals
     end
-
     avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
     high_score_visitor = avg_score.max_by { |k,v| v}
     high_score_visitor = high_score_visitor[0]
@@ -135,7 +121,6 @@ class StatTracker
     home_games.each do |game_team|
       grouped[game_team.team_id] << game_team.goals
     end
-
     avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
     high_score_home = avg_score.max_by { |k,v| v}
     high_score_home = high_score_home[0]
@@ -183,30 +168,22 @@ class StatTracker
     end
     team.teamname
   end
-
-
-#season stats
-def winningest_coach(season)
-   wins = group_wins(games_by_coach(season))
-  best_coach = wins.max_by do |coach, win_percent|
-    win_percent
+  #season stats
+  def winningest_coach(season)
+    wins = group_wins(games_by_coach(season))
+    best_coach = wins.max_by { |coach, win_percent| win_percent }
+    best_coach[0]
   end
 
-
-def worst_coach(season)
-   wins = group_wins(games_by_coach(season))
-  worst_coach = wins.min_by do |coach, win_percent|
-    win_percent
+  def worst_coach(season)
+    wins = group_wins(games_by_coach(season))
+    worst_coach = wins.min_by { |coach, win_percent| win_percent }
+    worst_coach[0]
   end
 
   def most_accurate_team(season)
-    team_results = seasonal_team_games(season).group_by do |team|
-      team.team_id
-    end
-    accuracy = team_results.transform_values do |team|
-      team.sum {|game| game.goals}.to_f / team.sum { |game| game.shots}
-    end
-    most_accurate = accuracy.max_by { |k, v| v}
+    accuracy(season)
+    most_accurate = accuracy(season).max_by { |k, v| v}
     accurate_team = @teams.find do |team|
       team.team_id.to_i == most_accurate[0]
     end
@@ -214,38 +191,30 @@ def worst_coach(season)
   end
 
   def least_accurate_team(season)
-    team_results = seasonal_team_games(season).group_by do |team|
-      team.team_id
-    end
-    accuracy = team_results.transform_values do |team|
-      team.sum {|game| game.goals}.to_f / team.sum { |game| game.shots}
-    end
-    least_accurate = accuracy.min_by { |k, v| v}
+    accuracy(season)
+    least_accurate = accuracy(season).min_by { |k, v| v}
     inaccurate_team = @teams.find do |team|
       team.team_id.to_i == least_accurate[0]
     end
     inaccurate_team.teamname
   end
 
-
-def most_tackles(season)
-  season_games = seasonal_team_games(season)
-  games_by_team = season_games.group_by do |game|
-    game.team_id
-  end
-  games_by_team.transform_keys! do |team_id|
-    correct_team = @teams.find do |team|
-      team.team_id == team_id.to_s
-    end
-    games_by_team = season_games.group_by do |game|
-      game.team_id
-    end
+  def most_tackles(season)
+    season_games = seasonal_team_games(season)
+    games_by_team = season_games.group_by { |game| game.team_id }
     games_by_team.transform_keys! do |team_id|
       correct_team = @teams.find do |team|
         team.team_id == team_id.to_s
       end
       correct_team.teamname
     end
+    # games_by_team = season_games.group_by do |game|
+    #   game.team_id
+    # end
+    # games_by_team.transform_keys! do |team_id|
+    #   correct_team = @teams.find do |team|
+    #     team.team_id == team_id.to_s
+    #   end
     all_tackles = games_by_team.transform_values do |array|
       tackles = array.sum do |game|
         game.tackles
@@ -258,14 +227,15 @@ def most_tackles(season)
     most_tackles[0]
   end
 
-def fewest_tackles(season)
-  season_games = seasonal_team_games(season)
-  games_by_team = season_games.group_by do |game|
-    game.team_id
-  end
-  games_by_team.transform_keys! do |team_id|
-    correct_team = @teams.find do |team|
-      team.team_id == team_id.to_s
+  def fewest_tackles(season)
+    season_games = seasonal_team_games(season)
+    games_by_team = season_games.group_by do |game|
+      game.team_id
+    end
+    games_by_team.transform_keys! do |team_id|
+      correct_team = @teams.find do |team|
+        team.team_id == team_id.to_s
+      end
     end
     games_by_team = season_games.group_by do |game|
       game.team_id
@@ -287,8 +257,7 @@ def fewest_tackles(season)
     end
     least_tackles[0]
   end
-
-  # team info
+    # team info
   def team_info(team_id)
     Team.team_info(team_id)
   end
@@ -363,7 +332,7 @@ def fewest_tackles(season)
       v == lowest_pct
     end
 
-    all_rivals = all_rivals.map do |team|
+    all_rivals = all_teams.map do |team|
       team.first
     end
 
@@ -376,8 +345,7 @@ def fewest_tackles(season)
     end
     all_rival_teams.first
   end
-
-  #helper methods
+    #helper methods
   def won_games_id(given_team_id) #used to help best/worst season
     team = @game_teams.find_all {|team| team.team_id.to_i == given_team_id.to_i}
     game_wins = team.find_all {|info| info.result == "WIN"}
@@ -493,5 +461,11 @@ def fewest_tackles(season)
       grouped[game_team.team_id] << game_team.goals
     end
     avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
+  end
+  def accuracy(season)
+    team_results = seasonal_team_games(season).group_by { |team| team.team_id }
+    accuracy = team_results.transform_values do |team|
+      team.sum {|game| game.goals}.to_f / team.sum { |game| game.shots}
+    end
   end
 end

@@ -72,6 +72,7 @@ class StatTrackerTest < Minitest::Test
   end
 
   def test_it_can_find_worst_offense
+    assert_equal "Philadelphia Union", @stat_tracker.worst_offense
   end
 
   def test_it_can_find_highest_scoring_visitor
