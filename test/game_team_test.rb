@@ -100,8 +100,7 @@ class GameTeamTest < Minitest::Test
   end
 
   def test_average_win_percentage_for_team
-    assert_equal 50.00, GameTeam.average_win_percentage(5)
-    assert_equal 0, GameTeam.average_win_percentage(7)
+    assert_equal 0.50, GameTeam.average_win_percentage("5")
   end
 
 end
