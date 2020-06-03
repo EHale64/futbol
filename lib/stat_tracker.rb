@@ -24,8 +24,8 @@ class StatTracker
     @teams = Team.accumulator
     @game_teams = GameTeam.accumulator
   end
-  # game stats
 
+  # game stats
   def highest_total_score
     Game.highest_total_score
   end
@@ -68,6 +68,7 @@ class StatTracker
     season_goals.transform_values {|goals| average(goals.sum, goals.count)}
   end
 
+  #league stats
   def count_of_teams
     @teams.count
   end
@@ -101,6 +102,7 @@ class StatTracker
     low_score_home = home_score.min_by { |k,v| v}[0]
     team = @teams.find {|team| team.team_id.to_i == low_score_home}.teamname
   end
+
   #season stats
   def winningest_coach(season)
     wins = group_wins(games_by_coach(season))
@@ -129,7 +131,8 @@ class StatTracker
   def fewest_tackles(season)
     team_tackles(season).min_by {|team, tackles| tackles}[0]
   end
-    # team info
+
+    # team stats
   def team_info(team_id)
     Team.team_info(team_id)
   end
@@ -154,14 +157,6 @@ class StatTracker
 
   def fewest_goals_scored(team_id)
     GameTeam.fewest_goals_scored(team_id)
-  end
-
-  def find_all_rival_or_favorite_opponents(all_teams)
-    all_teams = all_teams.map {|team| team.first}
-    all_team_objects = all_teams.map do |team_id|
-      @teams.find {|team| team.team_id.to_i == team_id }
-    end
-    all_team_objects.map {|team_obj| team_obj.teamname}.first
   end
 
   def favorite_opponent(team_id)
@@ -199,6 +194,14 @@ class StatTracker
       end
     end
     win_season_hash = winning_seasons.group_by {|season| season}
+  end
+
+  def find_all_rival_or_favorite_opponents(all_teams)
+    all_teams = all_teams.map {|team| team.first}
+    all_team_objects = all_teams.map do |team_id|
+      @teams.find {|team| team.team_id.to_i == team_id }
+    end
+    all_team_objects.map {|team_obj| team_obj.teamname}.first
   end
 
   def visitor_score
