@@ -41,7 +41,7 @@ class StatTracker
     average(home_wins, @game_teams.count/2)
   end
 
-  def percentage_away_wins
+  def percentage_visitor_wins
     away_wins = @game_teams.count do |game_team|
       game_team.result == "WIN" && game_team.hoa == "away"
     end
@@ -60,7 +60,7 @@ class StatTracker
 
   def average_goals_per_game
     goals = @game_teams.sum { |game| game.goals }
-    small_average(goals, @game_teams.count/2)
+    average(goals, @game_teams.count/2)
   end
 
   def average_goals_by_season
@@ -71,7 +71,7 @@ class StatTracker
       end
     end
     season_goals.transform_values do |goals|
-      small_average(goals.sum, goals.count)
+      average(goals.sum, goals.count)
     end
   end
 
