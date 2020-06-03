@@ -200,62 +200,15 @@ class StatTracker
   end
 
   def most_tackles(season)
-    season_games = seasonal_team_games(season)
-    games_by_team = season_games.group_by { |game| game.team_id }
-    games_by_team.transform_keys! do |team_id|
-      correct_team = @teams.find do |team|
-        team.team_id == team_id.to_s
-      end
-      correct_team.teamname
-    end
-    # games_by_team = season_games.group_by do |game|
-    #   game.team_id
-    # end
-    # games_by_team.transform_keys! do |team_id|
-    #   correct_team = @teams.find do |team|
-    #     team.team_id == team_id.to_s
-    #   end
-    all_tackles = games_by_team.transform_values do |array|
-      tackles = array.sum do |game|
-        game.tackles
-      end
+    team_tackles(season).max_by do |team, tackles|
       tackles
-    end
-    most_tackles = all_tackles.max_by do |team, tackles|
-      tackles
-    end
-    most_tackles[0]
+    end[0]
   end
 
   def fewest_tackles(season)
-    season_games = seasonal_team_games(season)
-    games_by_team = season_games.group_by do |game|
-      game.team_id
-    end
-    games_by_team.transform_keys! do |team_id|
-      correct_team = @teams.find do |team|
-        team.team_id == team_id.to_s
-      end
-    end
-    games_by_team = season_games.group_by do |game|
-      game.team_id
-    end
-    games_by_team.transform_keys! do |team_id|
-      correct_team = @teams.find do |team|
-        team.team_id == team_id.to_s
-      end
-      correct_team.teamname
-    end
-    all_tackles = games_by_team.transform_values do |array|
-      tackles = array.sum do |game|
-        game.tackles
-      end
+    team_tackles(season).min_by do |team, tackles|
       tackles
-    end
-    least_tackles = all_tackles.min_by do |team, tackles|
-      tackles
-    end
-    least_tackles[0]
+    end[0]
   end
     # team info
   def team_info(team_id)
@@ -462,10 +415,28 @@ class StatTracker
     end
     avg_score = grouped.map { |k,v| [k, (v.sum / v.count.to_f) ]}
   end
+
   def accuracy(season)
     team_results = seasonal_team_games(season).group_by { |team| team.team_id }
     accuracy = team_results.transform_values do |team|
       team.sum {|game| game.goals}.to_f / team.sum { |game| game.shots}
+    end
+  end
+
+  def team_tackles(season)
+    season_games = seasonal_team_games(season)
+    games_by_team = season_games.group_by { |game| game.team_id }
+    games_by_team.transform_keys! do |team_id|
+      correct_team = @teams.find do |team|
+        team.team_id == team_id.to_s
+      end
+      correct_team.teamname
+    end
+    all_tackles = games_by_team.transform_values do |array|
+      tackles = array.sum do |game|
+        game.tackles
+      end
+      tackles
     end
   end
 end
