@@ -1,4 +1,4 @@
-##Futbol Refactor Deliverable
+## Futbol Refactor Deliverable
 
 * Once methods completed, initial refactor involved helper methods being created and separated to shorten stat tracker methods. Helper methods were identified as methods that with application in multiple stat tracker method.
 
